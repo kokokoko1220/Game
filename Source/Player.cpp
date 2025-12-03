@@ -29,11 +29,13 @@ T lerp(T a, T b, T t)
 Player::Player()
 {
 	//model = new Model("Data/Model/Mr.Incredible/Mr.Incredible.mdl");
-	model = new Model("Data/Model/Scooter/scooter.mdl");//koko//キャラクターモデル
+	model = new Model("Data/Model/Scooter/alcS.mdl");//koko//キャラクターモデル
+	//model = new Model("Data/Model/Scooter/scooter.mdl");//koko//キャラクターモデル
 	//model = new Model("Data/Model/Ptcar/Ptcar2.mdl");//koko//パトカー
 	//model = new Model("Data/Model/DustBox/Dust1.mdl");//koko//ゴミ箱
 	//モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.01f;
+	scale.x = scale.y = scale.z = 0.004f;
+	//scale.x = scale.y = scale.z = 0.01f;
 
 	position.x = 73.0f;
 	HP = 3;
@@ -77,13 +79,30 @@ void Player::Update(float elapsedTime) {
 	{
 		SceneManager::Instance().ChangeScene(new SceneLoading(new SceneEnd));
 	}
-	// 足元にレイを飛ばして地面の高さを取得
-	HitResult hit;
-	DirectX::XMFLOAT3 start = { position.x, position.y + 1.0f, position.z };
-	DirectX::XMFLOAT3 end = { position.x, position.y - 100.0f, position.z };
-	if (Stage::Instance().RayCast(start, end, hit)) {
-		position.y = hit.position.y; // 地面に吸着
+
+	raycast_counter++;
+
+	// RAYCAST_INTERVAL フレームごとに処理を実行
+	if (raycast_counter >= RAYCAST_INTERVAL)
+	{
+		raycast_counter = 0; // カウンターをリセット
+
+		// 足元にレイを飛ばして地面の高さを取得 (レイキャスト処理)
+		HitResult hit;
+		DirectX::XMFLOAT3 start = { position.x, position.y + 1.0f, position.z };
+		DirectX::XMFLOAT3 end = { position.x, position.y - 100.0f, position.z };
+
+		if (Stage::Instance().RayCast(start, end, hit)) {
+			position.y = hit.position.y; // 地面に吸着
+		}
 	}
+	//// 足元にレイを飛ばして地面の高さを取得
+	//HitResult hit;
+	//DirectX::XMFLOAT3 start = { position.x, position.y + 1.0f, position.z };
+	//DirectX::XMFLOAT3 end = { position.x, position.y - 100.0f, position.z };
+	//if (Stage::Instance().RayCast(start, end, hit)) {
+	//	position.y = hit.position.y; // 地面に吸着
+	//}
 }
 
 //描画処理
