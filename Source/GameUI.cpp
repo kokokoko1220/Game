@@ -2,17 +2,56 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/Graphics.h"
 #include "imgui.h"
+#include"Camera.h"
+
+#include <cmath>            // ← atan2f
+#include <cfloat>
+#include <DirectXMath.h>
+#include "Goal.h"
+#include "GoalManager.h"
+#include "Player.h"         // ← Player の位置/向きを使う
+
+using namespace DirectX;
+
+namespace {
+    inline float WrapPi(float a) {
+        while (a > XM_PI)  a -= XM_2PI;
+        while (a < -XM_PI) a += XM_2PI;
+        return a;
+    }
+    inline float YawFromVectorXZ(const XMFLOAT3& v) {
+        return std::atan2f(v.x, v.z); // +Z基準
+    }
+    inline Goal* FindNearestGoalXZ(const XMFLOAT3& basePos) {
+        auto& gm = GoalManager::Instance();
+        int n = gm.GetGoalCount();
+        Goal* nearest = nullptr;
+        float bestD2 = FLT_MAX;
+        for (int i = 0; i < n; ++i) {
+            Goal* g = gm.GetGoal(i);
+            XMFLOAT3 pos = g->GetPosition();
+            float dx = pos.x - basePos.x;
+            float dz = pos.z - basePos.z;
+            float d2 = dx * dx + dz * dz;
+            if (d2 < bestD2) { bestD2 = d2; nearest = g; }
+        }
+        return nearest;
+    }
+}
+
+
+
 
 
 void GameUI::Initialize()
 {
-    gauge = gauge_MAX;
+    gauge = gauge_MIN;
     // スプライトの生成
     sprite = new Sprite("Data/Sprite/cage.png");
     sprite2 = new Sprite("Data/Sprite/yazirusi.png");
- 
-    Bottole = new Sprite("Data/Sprite/Bottole.png");
+    sprite3 = new Sprite("Data/Sprite/yazirusi2.png");
 
+    Bottole = new Sprite("Data/Sprite/Bottole.png");
     face = new Sprite("Data/Font/font1.png");
 
     // ★ フォントを追加（これだけで文字がくっきり表示されます）
@@ -46,16 +85,15 @@ void GameUI::Update(float elapsedTime)
     SHORT keyState = GetAsyncKeyState(VK_SPACE);
     bool isPressed = (keyState & 0x8000);
     // 押した瞬間だけ反応
-    //if (isPressed && !wasSpacePressed /*&& cool_time_switch == true*/)
-    if (isPressed && !wasSpacePressed && item != 0)//kokoko
+    if (isPressed && !wasSpacePressed && iteam != 0 && cool_time_switch == false)
     {
         // スペース押した瞬間の処理
 
 
         gauge_UP_switch = true;
         cool_time_switch = false;
-
-        --item;//kokoko
+        --iteam;
+        cool_time_switch = true;
     }
 
     if (gauge >= gauge_MIN)
@@ -65,11 +103,12 @@ void GameUI::Update(float elapsedTime)
     if (gauge_UP_switch == true)
     {
 
-        gauge -= static_cast<float>(80 * elapsedTime);
+        gauge -= static_cast<float>(120 * elapsedTime);
         time += static_cast<float>(elapsedTime);
 
         if (time > 1)
         {
+            cool_time_switch = false;
             gauge_UP_switch = false;
             time = 0;
         }
@@ -98,6 +137,40 @@ void GameUI::Update(float elapsedTime)
     {
         clearcount++;   //ここで配達できた個数のカウント
     }
+    // =========================
+    // ▼ 一番近いゴールの方向を計算
+    // =========================
+
+    arrowVisible = false;
+
+    // カメラ位置・前向き
+    const XMFLOAT3 basePos = Camera::Instance().GetEye();
+    const XMFLOAT3 forward = Camera::Instance().GetFront();
+    const float     baseYaw = YawFromVectorXZ(forward);
+
+    // 最寄りゴール
+    Goal* nearest = FindNearestGoalXZ(basePos);
+    if (nearest) {
+        const XMFLOAT3 goalPos = nearest->GetPosition();
+
+        XMFLOAT3 toGoal{
+            goalPos.x - basePos.x,
+            0.0f,
+            goalPos.z - basePos.z
+        };
+
+        const float d2 = toGoal.x * toGoal.x + toGoal.z * toGoal.z;
+        if (d2 > 0.01f) { // 近すぎる/ゼロ距離は不安定なので弾く
+            float targetYaw = YawFromVectorXZ(toGoal);
+            float rel = WrapPi(targetYaw - baseYaw);
+
+            // 画像の基準が「上向き」なら 0.0f のままでOK
+            const float spriteOffset = 0.0f;
+            arrowAngle = rel + spriteOffset;
+            arrowVisible = true;
+        }
+    }
+
 }
 
 void GameUI::Render()
@@ -118,7 +191,7 @@ void GameUI::Render()
     //=============================================
     // ★ アルファブレンド有効化
     //=============================================
-   
+
 
     D3D11_BLEND_DESC blendDesc = {};
     blendDesc.AlphaToCoverageEnable = FALSE;
@@ -145,17 +218,34 @@ void GameUI::Render()
         screenWidth - 64, 300, 84, 320,  // x, y, 幅, 高さ
         0,
         1, 1, 1, 1);
-
     Bottole->Render(dc,
-        screenWidth / 2, screenHeight - 128 + 20, 128, 128,  // x, y, ��, ����
+        screenWidth / 2, screenHeight - 128 + 20, 128, 128,  // x, y, 幅, 高さ
         0,
         1, 1, 1, 1);
-
     // yazirusi.png（透過付き）
     sprite2->Render(dc,
         screenWidth - 64 - 64, gauge, 64, 64,
         0,
         1, 1, 1, 1);
+
+    /* sprite3->Render(dc,
+         screenWidth / 2, 0, 64, 64,
+         0,
+         1, 1, 1, 1);*/
+
+    if (arrowVisible) {
+        const float cx = screenWidth * 0.5f;
+        const float cy = screenHeight * 0.15f; // 画面上部に出す例
+        //sprite3->Render(dc, cx, cy, 64, 64, arrowAngle, 1, 1, 1, 1);
+        // 度に変換して渡す（試してみてください）
+        float angleDeg = arrowAngle * 180.0f / DirectX::XM_PI;
+        sprite3->Render(dc, cx, cy, 64, 64, angleDeg, 1, 1, 1, 1);
+    }
+    //if (arrowVisible && sprite3) {
+    //    float cx = screenWidth * 0.5f;
+    //    float cy = screenHeight * 0.12f; // 上辺付近
+    //    sprite3->Render(dc, cx, cy, 64, 64, arrowAngle, 1, 1, 1, 1);
+    //}
 
 
 
@@ -184,13 +274,10 @@ void GameUI::Render()
 
         // 白文字で描画（RGBA）
         face->textout(dc, buf, textX, textY, 64, 64, 1, 1, 1, 1);
-
         std::snprintf(buf, sizeof(buf),
             "%3d",
-            //clearcount
-        item//kokoko
-            );
-       // face->textout(dc, buf, screenWidth / 2 - 10, screenHeight - 64, 50, 50, 1, 1, 1, 1);
+            iteam
+        );
         face->textout(dc, buf, screenWidth / 2 - 30, screenHeight - 45, 50, 50, 1, 1, 1, 1);
         // 例：タイトルも出す
        // face->textout(dc, "POWER", textX, textY - 20.0f, cellW, cellH, 1, 1, 1, 1);

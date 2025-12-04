@@ -168,6 +168,8 @@
     <ClCompile Include="Source\Stage.cpp">
       <Filter>Source\Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Goal.cpp" />
+    <ClCompile Include="Source\GoalManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imgui.h">
@@ -329,6 +331,8 @@
     <ClInclude Include="Source\Stage.h">
       <Filter>Source\header</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Goal.h" />
+    <ClInclude Include="Source\GoalManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Debug.hlsli">

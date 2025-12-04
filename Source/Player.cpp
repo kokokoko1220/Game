@@ -487,7 +487,7 @@ void Player::CollisionPlayerVsBottleDelete()
 			DeleteCount++;
 			/*ui->gauge_UP_switch = true;
 			ui->cool_time_switch = false;*/
-			ui->item++;//kokokok
+			ui->iteam++;//kokokok
 		}
 	}
 }

@@ -131,6 +131,8 @@
     <ClInclude Include="Source\EnemyPolice.h" />
     <ClInclude Include="Source\Framework.h" />
     <ClInclude Include="Source\GameUI.h" />
+    <ClInclude Include="Source\Goal.h" />
+    <ClInclude Include="Source\GoalManager.h" />
     <ClInclude Include="Source\Graphics\DebugRenderer.h" />
     <ClInclude Include="Source\Graphics\Graphics.h" />
     <ClInclude Include="Source\Graphics\ImGuiRenderer.h" />
@@ -182,6 +184,8 @@
     <ClCompile Include="Source\EnemyPolice.cpp" />
     <ClCompile Include="Source\Framework.cpp" />
     <ClCompile Include="Source\GameUI.cpp" />
+    <ClCompile Include="Source\Goal.cpp" />
+    <ClCompile Include="Source\GoalManager.cpp" />
     <ClCompile Include="Source\Graphics\DebugRenderer.cpp" />
     <ClCompile Include="Source\Graphics\Graphics.cpp" />
     <ClCompile Include="Source\Graphics\ImGuiRenderer.cpp" />

@@ -10,6 +10,8 @@
 #include "Dustbox.h"
 #include"SceneManager.h"
 #include"GameUI.h"
+#include"Goal.h"
+#include"GoalManager.h"
 #include <vector>
 #include <random> 
 
@@ -121,12 +123,20 @@ void SceneGame::Initialize()
 		creatureManager.Register(dust);
 	}
 	player = &Player::Instance();
+	//配達位置
+	GoalManager& goalManager = GoalManager::Instance();
+	for (int i = 0; i <= 2; i++)
+	{
+		Goal* goal = new Goal();
+		goal->SetPosition(DirectX::XMFLOAT3(i * 10 - 10, 0, 0));
+		goalManager.Register(goal);
+	}
 	// UI ������ď�����
 	gameUI = new GameUI();
 	gameUI->Initialize();
 	//Player::Instance().SetUI(gameUI);kokoko
 	player->SetUI(gameUI);	//kokokoko
-
+	gameUI->SetPlayer(player);
 }
 
 // 終了化
@@ -140,6 +150,7 @@ void SceneGame::Finalize()
 	//物初期化
 	CreatureManager::Instance().Clear();
 
+	GoalManager::Instance().Clear();
 	//カメラコントローラー終了化
 	if (cameraController != nullptr) {
 		delete cameraController;
@@ -176,6 +187,7 @@ void SceneGame::Update(float elapsedTime)
 	//アイテム更新処理
 	ItemManager::Instance().Update(elapsedTime);
 	//SceneManager::Instance().Update(elapsedTime);
+	GoalManager::Instance().Update(elapsedTime, player);
 	// ====================== =
 	// アイテムのスポーン処理
 	// =======================kokoko
@@ -266,6 +278,7 @@ void SceneGame::Render()
 		//物描画
 		CreatureManager::Instance().Render(dc, shader);
 
+		GoalManager::Instance().Render(dc, shader);
 		//プレイヤー描画
 		Player::Instance().Render(dc, shader);
 

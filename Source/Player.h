@@ -100,6 +100,7 @@ private:
 
 	float randomTimer = 0.0f;
 	int   randomValue = 0;
+	int iteam = 0;
 
 	// ==== 車のような旋回用パラメータ ====
 	float yaw = 0.0f;              // 現在の向き角（ラジアン）
