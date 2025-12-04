@@ -54,6 +54,7 @@ void Player::Update(float elapsedTime) {
 		axisX = gamePad.GetAxisLX();
 		axisY = gamePad.GetAxisLY();
 	}
+	
 
 	drunkenness(elapsedTime);
 	//移動入力処理
@@ -291,6 +292,7 @@ void Player::Reset()
 	randomTimer = 0.0f;
 	axisX = 0.0f;
 	axisY = 0.0f;
+	
 }
 
 //移動入力処理
@@ -436,8 +438,28 @@ void Player::CollisionPlayerVsEnemies()
 			outPosition))
 		{
 		// 押し出し後の位置設定
-			enemy->SetPosition(outPosition);
+			/*enemy->SetPosition(outPosition);*/
 			isDamage = true;	//被弾した時TRUEにする
+			DirectX::XMFLOAT3 dir = {
+			 enemy->GetPosition().x - position.x,
+			 0.0f,
+			 enemy->GetPosition().z - position.z
+			};
+
+			// 正規化
+			float len = sqrtf(dir.x * dir.x + dir.z * dir.z);
+			if (len > 0.001f) {
+				dir.x /= len;
+				dir.z /= len;
+			}
+
+			// ノックバック速度
+			enemy->knockbackVel.x = dir.x * 3000.0f;  // 強さは調整
+			enemy->knockbackVel.y = 0.0f;          // 今はXZだけ
+			enemy->knockbackVel.z = dir.z * 3000.0f;
+
+			// ノックバック時間
+			enemy->knockbackTimer = 0.5f; // 0.5秒ノックバック
 		}
 	}
 }
@@ -483,7 +505,9 @@ void Player::PlayerDamage(float elapsedTime)
 	if (invincibleTime == 0) {
 		if (isDamage) {
 			HP -= 1;
-			invincibleTime = 60;
+			invincibleTime = 70;
+			// ★★★ ここで0.7秒停止開始 ★★★
+			
 			return;
 		}
 	}

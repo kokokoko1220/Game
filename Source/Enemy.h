@@ -7,7 +7,14 @@
 class Enemy : public Character {
 public:
 	Enemy() {};
-	~Enemy() override {};
+	virtual ~Enemy() override {};
+	DirectX::XMFLOAT3 knockbackVel = { 0.0f, 0.0f, 0.0f };//ノックバック用
+	float knockbackTimer = 0.0f;
+
+	// 追加
+	float disappearTimer = 0.0f;  // ノックバック後の消滅タイマー
+	bool toDisappear = false;     // 消滅フラグ
+
 	//更新処理
 	virtual void Update(float elapsedTime) = 0;
 	//描画処理

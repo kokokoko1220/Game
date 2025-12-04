@@ -39,6 +39,26 @@ delete model;
 //更新処理
 void Enemycar::Update(float elapsedTime) {
 	//オブジェクト行列を更新
+	// ノックバック処理
+	if (knockbackTimer > 0.0f)
+	{
+		knockbackTimer -= elapsedTime;
+
+		// 現在位置にノックバック速度を加算
+		position.x += knockbackVel.x * elapsedTime;
+		position.z += knockbackVel.z * elapsedTime;
+
+		// 徐々に減衰させる（摩擦）
+		knockbackVel.x *= 0.85f;
+		knockbackVel.z *= 0.85f;
+
+		// ノックバック中は通常処理を停止
+		if (knockbackTimer > 0.0f)
+	UpdateTransform();
+	//モデル行列更新
+	model->UpdateTransform(transform);
+			return;
+	}
 	UpdateTransform();
 	//モデル行列更新
 	model->UpdateTransform(transform);
