@@ -6,7 +6,7 @@
 #include "Framework.h"
 #include "SceneManager.h"
 #include "SceneTitle.h"
-
+#include"EffectManager.h"
 // 垂直同期間隔設定
 static const int syncInterval = 1;
 
@@ -16,6 +16,8 @@ Framework::Framework(HWND hWnd)
 	, input(hWnd)
 	, graphics(hWnd)
 {
+	//エフェクトマネージャー初期化
+	EffectManager::Instance().Initialize();
 	SceneManager::Instance().ChangeScene(new SceneTitle);
 }
 
@@ -23,6 +25,8 @@ Framework::Framework(HWND hWnd)
 Framework::~Framework()
 {
 	SceneManager::Instance().Clear();
+	//エフェクトマネージャー終了化
+	EffectManager::Instance().Finalize();
 }
 
 // 更新処理
@@ -39,6 +43,8 @@ void Framework::Update(float elapsedTime/*Elapsed seconds from last frame*/)
 void Framework::Render(float elapsedTime/*Elapsed seconds from last frame*/)
 {
 	ID3D11DeviceContext* dc = graphics.GetDeviceContext();
+
+	std::lock_guard<std::mutex> lock(graphics.GetMutex());
 
 	// IMGUIフレーム開始処理
 	graphics.GetImGuiRenderer()->NewFrame();

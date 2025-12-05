@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include <memory>
 #include <d3d11.h>
 #include <wrl.h>
@@ -53,6 +54,8 @@ public:
 
 	RenderState* GetRenderState() { return renderState.get(); }
 
+	std::mutex& GetMutex() { return mutex; }
+
 private:
 	static Graphics*								instance;
 
@@ -72,4 +75,5 @@ private:
 	float	screenHeight;
 
 	std::unique_ptr<RenderState>					renderState;
+	std::mutex										mutex;
 };

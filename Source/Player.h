@@ -4,7 +4,7 @@
 #include"Graphics/Model.h"
 #include"Character.h"
 #include"GameUI.h"
-
+#include"Effect.h"
 //プレイヤー
 class Player : public Character {
 public:
@@ -66,6 +66,8 @@ private :
 	//ジャンプ入力処理
 	//void InputJump();
 
+	
+
 protected:
 
 	// 着地した時に呼ばれる
@@ -121,4 +123,7 @@ private:
 
 	float t = 0.0f; // デフォルト
 	GameUI* ui = nullptr;
+
+	Effect* hitEffect = nullptr;//ヒットエフェクト
+
 };

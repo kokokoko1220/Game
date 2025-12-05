@@ -43,6 +43,7 @@ void SceneTutorial::Update(float elapsedTime)
 	{
 		if (page == 1)
 			SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+			//SceneManager::Instance().ChangeScene(new SceneGame);//ロードで止まっちゃう
 		else
 			page++;
 	}

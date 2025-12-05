@@ -8,6 +8,7 @@
 #include "Bottle.h"
 #include "CreatureManager.h"
 #include "Dustbox.h"
+#include"EffectManager.h"
 #include"SceneManager.h"
 #include"GameUI.h"
 #include"Goal.h"
@@ -77,6 +78,9 @@ void SceneGame::Initialize()
 		0.1f,
 		1000.0f);
 	cameraController = new CameraController();
+
+	
+
 	//プレイヤー初期化
 	Player::Instance().Reset();
 
@@ -162,6 +166,9 @@ void SceneGame::Finalize()
 		delete stage;
 		stage = nullptr;
 	}
+
+	
+
 	gameUI->Finalize();
 }
 
@@ -177,6 +184,7 @@ void SceneGame::Update(float elapsedTime)
 
 	//ステージ更新処理
 	stage->Update(elapsedTime);
+	
 
 	//プレイヤー更新処理
 	Player::Instance().Update(elapsedTime);
@@ -232,6 +240,9 @@ void SceneGame::Update(float elapsedTime)
 
 	//物の更新処理
 	CreatureManager::Instance().Update(elapsedTime);
+	
+	//エフェクト更新処理
+	EffectManager::Instance().Update(elapsedTime);
 
 	gameUI->Update(elapsedTime);
 }
@@ -282,8 +293,13 @@ void SceneGame::Render()
 		//プレイヤー描画
 		Player::Instance().Render(dc, shader);
 
+		//エフェクト描画
+
+		EffectManager::Instance().Render(rc.view, rc.projection);
+
 		//シェーダー終了
 		shader->End(dc);
+
 
 	}
 
