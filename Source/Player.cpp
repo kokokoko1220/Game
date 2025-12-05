@@ -423,6 +423,10 @@ void Player::InputMove(float elapsedTime) {
 // プレイヤーとエネミーとの衝突処理
 void Player::CollisionPlayerVsEnemies()
 {
+	// ★無敵時間中は何も処理しない！
+	if (invincibleTime > 0) {
+		return;
+	}
 	EnemyManager& enemyManager = EnemyManager::Instance();
 
 	// 全ての敵と総当たりで衝突処理
