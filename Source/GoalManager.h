@@ -3,6 +3,7 @@
 #include <set>
 #include <d3d11.h>
 
+class GameUI;
 class Goal;
 class Shader;
 class Player;          // ★ 追加：前方宣言（これがないと Player* が未定義）
@@ -29,7 +30,7 @@ public:
 
     int   GetGoalCount() const { return static_cast<int>(goals.size()); }
     Goal* GetGoal(int index) { return goals.at(index); }
-
+    GameUI* ui = nullptr;
 private:
     void CollisionGoalVsGoals();
     void CollisionPlayerVsGoals(Player* player);   // ★ 追加：宣言をヘッダに

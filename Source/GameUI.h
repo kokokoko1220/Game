@@ -18,6 +18,7 @@ public:
     int gauge_MAX = 320 - 50;
     int gauge_MIN = 620 - 32;
     int iteam = 0;
+    int clearcount = 0;
     bool gauge_UP_switch = false;
     bool cool_time_switch = false;
 private:
@@ -30,7 +31,7 @@ private:
     Sprite* Bottole = nullptr;
 
 
-    int clearcount = 0;
+   
 
     float gauge_UP;
     float time = 0;

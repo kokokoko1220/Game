@@ -138,6 +138,8 @@ void SceneGame::Initialize()
 	// UI ������ď�����
 	gameUI = new GameUI();
 	gameUI->Initialize();
+	auto& gm = GoalManager::Instance();
+	gm.ui = gameUI;
 	//Player::Instance().SetUI(gameUI);kokoko
 	player->SetUI(gameUI);	//kokokoko
 	gameUI->SetPlayer(player);

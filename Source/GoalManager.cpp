@@ -85,6 +85,7 @@ void GoalManager::CollisionPlayerVsGoals(Player* player) {  // ★ クラスメンバー
             // 当たったら遅延削除
             Remove(g);
             // ここでスコアやSEなど
+            if (ui)ui->clearcount += 1;
         }
     }
 }
