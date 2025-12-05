@@ -24,10 +24,11 @@ model = new Model("Data/Model/Slime/Slime.mdl");
 	//スケーリング
 	scale.x = scale.y = scale.z = 0.01f;
 
-
 	//幅、高さ設定
 	radius = 0.5f;
 	height = 1.0f;
+
+	id = Enemy::Slime;
 }
 
 //デストラクタ

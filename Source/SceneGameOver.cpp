@@ -1,5 +1,5 @@
 #include "Graphics/Graphics.h"
-#include "SceneEnd.h"
+#include "SceneGameOver.h"
 #include"Input/Input.h"
 #include "SceneManager.h"
 #include "SceneLoading.h"
@@ -7,14 +7,14 @@
 #include"Camera.h"
 
 //初期化
-void SceneEnd::Initialize()
+void SceneGameOver::Initialize()
 {
 	//スプライト初期化
-	sprite = new Sprite("Data/Sprite/GameClear.png");
+	sprite = new Sprite("Data/Sprite/GameOver.png");
 }
 
 //終了化
-void SceneEnd::Finalize()
+void SceneGameOver::Finalize()
 {
 	//スプライト終了化
 	if (sprite != nullptr)
@@ -25,7 +25,7 @@ void SceneEnd::Finalize()
 }
 
 //更新処理
-void SceneEnd::Update(float elapsedTime)
+void SceneGameOver::Update(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -43,7 +43,7 @@ void SceneEnd::Update(float elapsedTime)
 }
 
 //描画処理
-void SceneEnd::Render()
+void SceneGameOver::Render()
 {
 	// ======== 2Dスプライト描画 ========
 	{
@@ -75,7 +75,7 @@ void SceneEnd::Render()
 }
 
 //GUI描画
-void SceneEnd::DrawGUI()
+void SceneGameOver::DrawGUI()
 {
 
 }

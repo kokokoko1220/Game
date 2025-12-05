@@ -170,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="Source\Goal.cpp" />
     <ClCompile Include="Source\GoalManager.cpp" />
+    <ClCompile Include="Source\SceneGameOver.cpp">
+      <Filter>Source\Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imgui.h">
@@ -333,6 +336,9 @@
     </ClInclude>
     <ClInclude Include="Source\Goal.h" />
     <ClInclude Include="Source\GoalManager.h" />
+    <ClInclude Include="Source\SceneGameOver.h">
+      <Filter>Source\header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Debug.hlsli">

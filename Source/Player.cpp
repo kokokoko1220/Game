@@ -9,6 +9,7 @@
 #include "SceneEnd.h"
 #include "SceneLoading.h"
 #include "SceneManager.h"
+#include "SceneGameOver.h"
 #include <Stage.h>
 #include"GameUI.h"
 
@@ -439,7 +440,6 @@ void Player::CollisionPlayerVsEnemies()
 		{
 		// 押し出し後の位置設定
 			/*enemy->SetPosition(outPosition);*/
-			isDamage = true;	//被弾した時TRUEにする
 			DirectX::XMFLOAT3 dir = {
 			 enemy->GetPosition().x - position.x,
 			 0.0f,
@@ -460,6 +460,19 @@ void Player::CollisionPlayerVsEnemies()
 
 			// ノックバック時間
 			enemy->knockbackTimer = 0.5f; // 0.5秒ノックバック
+
+			switch (enemy->id)
+			{
+			case Enemy::Police:
+				isDamage = true;
+				break;
+			case Enemy::Slime:
+				SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGameOver));
+				break;
+
+			default:
+				break;
+			}
 		}
 	}
 }

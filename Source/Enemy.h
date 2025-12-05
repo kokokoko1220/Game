@@ -26,4 +26,11 @@ public:
 	bool isDead = false;
 	void Destroy() { isDead = true; }
 	bool IsDead() const { return isDead; }
+
+	enum EnemyType {
+		Police,
+		Slime
+	};
+
+	EnemyType id = Police;	//“G‚Ìí—Ş‚ğ”»•Ê‚·‚é‚½‚ß‚Ì•Ï”
 };

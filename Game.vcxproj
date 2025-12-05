@@ -157,6 +157,7 @@
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneEnd.h" />
     <ClInclude Include="Source\SceneGame.h" />
+    <ClInclude Include="Source\SceneGameOver.h" />
     <ClInclude Include="Source\SceneLoading.h" />
     <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\SceneTitle.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\SceneEnd.cpp" />
     <ClCompile Include="Source\SceneGame.cpp" />
+    <ClCompile Include="Source\SceneGameOver.cpp" />
     <ClCompile Include="Source\SceneLoading.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\SceneTitle.cpp" />
