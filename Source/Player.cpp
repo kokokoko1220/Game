@@ -36,14 +36,16 @@ Player::Player()
 	//モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.004f;
 	//scale.x = scale.y = scale.z = 0.01f;
-
 	position.x = 73.0f;
 	HP = 3;
+	//ヒットエフェクト読み込み
+	hitEffect = new Effect("Data/Effect/Hit.efk");
 }
 
 //デストラクタ
 Player::~Player() {
 	delete model;
+	delete hitEffect;
 }
 
 //更新処理
@@ -460,6 +462,12 @@ void Player::CollisionPlayerVsEnemies()
 
 			// ノックバック時間
 			enemy->knockbackTimer = 0.5f; // 0.5秒ノックバック
+			{
+				DirectX::XMFLOAT3 e = enemy->GetPosition();
+				e.y += enemy->GrtHeigth() * 0.5f;
+				hitEffect->Play(e);
+			
+			}
 		}
 	}
 }
