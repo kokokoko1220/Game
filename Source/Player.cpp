@@ -37,14 +37,15 @@ Player::Player()
 	//モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.004f;
 	//scale.x = scale.y = scale.z = 0.01f;
-
 	position.x = 73.0f;
 	HP = 3;
+	hitEffect = new Effect("Data/Effect/Hit.efk");//effect
 }
 
 //デストラクタ
 Player::~Player() {
 	delete model;
+	delete hitEffect;
 }
 
 //更新処理
@@ -422,6 +423,9 @@ void Player::InputMove(float elapsedTime) {
 // プレイヤーとエネミーとの衝突処理
 void Player::CollisionPlayerVsEnemies()
 {
+	if (invincibleTime > 0) {
+		return;
+	}
 	EnemyManager& enemyManager = EnemyManager::Instance();
 
 	// 全ての敵と総当たりで衝突処理
@@ -461,10 +465,18 @@ void Player::CollisionPlayerVsEnemies()
 			// ノックバック時間
 			enemy->knockbackTimer = 0.5f; // 0.5秒ノックバック
 
+
+			// ★ ここでエフェクト再生 ★
+			if (hitEffect) {
+				hitEffect->Play(position, 1.0f); // 1.0f はスケール
+			}
+
+
 			switch (enemy->id)
 			{
 			case Enemy::Police:
 				isDamage = true;
+		
 				break;
 			case Enemy::Slime:
 				SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGameOver));
