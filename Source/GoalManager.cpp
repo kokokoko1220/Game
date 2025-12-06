@@ -80,7 +80,7 @@ void GoalManager::CollisionPlayerVsGoals(Player* player) {  // ★ クラスメンバー
         if (!g) continue;
         if (Collision::IntersectSphereVsSphere(
             ppos, prad,
-            g->GetPosition(), g->GetRadius(),
+            g->GetPosition(), g->GetRadius()*4,
             dummy)) {
             // 当たったら遅延削除
             Remove(g);
