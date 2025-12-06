@@ -28,11 +28,17 @@ private:
     Sprite* sprite3 = nullptr;
 
     Sprite* face = nullptr;
+    Sprite* white = nullptr;
     Sprite* Bottole = nullptr;
+    Sprite* one = nullptr;
+    Sprite* two = nullptr;
+    Sprite* three = nullptr;
+    Sprite* start = nullptr;
 
-
-   
-
+    int displayCount;
+    float countdown = 3.0f;  // 3•bƒJƒEƒ“ƒg
+    float timer = 0.0f;
+    float Density = 0;
     float gauge_UP;
     float time = 0;
 

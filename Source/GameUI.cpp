@@ -10,7 +10,9 @@
 #include "Goal.h"
 #include "GoalManager.h"
 #include "Player.h"         // ← Player の位置/向きを使う
-
+#include"SceneManager.h"
+#include"SceneEnd.h"
+#include"SceneLoading.h"
 using namespace DirectX;
 
 namespace {
@@ -53,7 +55,12 @@ void GameUI::Initialize()
 
     Bottole = new Sprite("Data/Sprite/Bottole.png");
     face = new Sprite("Data/Font/font1.png");
+    white = new Sprite("Data/Sprite/white.png");
 
+    one = new Sprite("Data/Sprite/1.png");
+    two = new Sprite("Data/Sprite/2.png");
+    three = new Sprite("Data/Sprite/3.png");
+    start = new Sprite("Data/Sprite/start.png");
     // ★ フォントを追加（これだけで文字がくっきり表示されます）
     //ImGuiIO& io = ImGui::GetIO();
    // io.Fonts->AddFontFromFileTTF("Data/Font/MyFont.ttf", 32.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
@@ -170,8 +177,27 @@ void GameUI::Update(float elapsedTime)
             arrowVisible = true;
         }
     }
+    if (clearcount >= 3)
+    {
+        Density += static_cast<float>(1.5 * elapsedTime);
+        if (Density >= 1)
+        {
+            SceneManager::Instance().ChangeScene(new SceneLoading(new SceneEnd));
+        }
+    }
+    timer += static_cast<float>(elapsedTime * 2);
+
+    float remaining = countdown - timer;
+
+    if (remaining < 0.0f)
+        remaining = 0.0f;
+
+    // ★ 小数点を切り上げて「3,2,1,0」に変換
+    displayCount = static_cast<int>(ceil(remaining));
+
 
 }
+
 
 void GameUI::Render()
 {
@@ -227,6 +253,42 @@ void GameUI::Render()
         screenWidth - 64 - 64, gauge, 64, 64,
         0,
         1, 1, 1, 1);
+
+    switch (displayCount)
+    {
+    case 3:
+        // ★ カウントダウン「3」のときの処理
+        // 画像1を表示、SE再生など
+        three->Render(dc,
+            screenWidth / 2 - 256, screenHeight / 2 - 256, 512, 512,  // x, y, 幅, 高さ
+            0,
+            1, 1, 1, 1);
+        break;
+
+    case 2:
+        // ★ カウントダウン「2」のときの処理
+        two->Render(dc,
+            screenWidth / 2 - 256, screenHeight / 2 - 256, 512, 512,  // x, y, 幅, 高さ
+            0,
+            1, 1, 1, 1);
+        break;
+
+    case 1:
+        // ★ カウントダウン「1」のときの処理
+        one->Render(dc,
+            screenWidth / 2 - 256, screenHeight / 2 - 256, 512, 512,  // x, y, 幅, 高さ
+            0,
+            1, 1, 1, 1);
+        break;
+
+    case 0:
+        // ★ カウント終了（GO!）
+        start->Render(dc,
+            screenWidth / 2 - 256, screenHeight / 2 - 256, 512, 512,  // x, y, 幅, 高さ
+            0,
+            1, 1, 1, 1);
+        break;
+    }
 
     /* sprite3->Render(dc,
          screenWidth / 2, 0, 64, 64,
@@ -288,7 +350,10 @@ void GameUI::Render()
 
 
 
-
+    white->Render(dc,
+        0, 0, 2000, 1000,
+        0,
+        1, 1, 1, Density);
     // 後始末
     dc->OMSetBlendState(nullptr, blendFactor, 0xffffffff);
     if (alphaBlend) alphaBlend->Release();
