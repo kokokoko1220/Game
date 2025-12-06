@@ -19,10 +19,11 @@ void Enemy::DrawDebugPrimitive() {
 Enemycar::Enemycar() {
 //車モデルを読み込み
  
-model = new Model("Data/Model/Slime/Slime.mdl");
+	model = new Model("Data/Model/Slime/Slime.mdl"); 
+	
 
 	//スケーリング
-	scale.x = scale.y = scale.z = 0.01f;
+	scale.x = scale.y = scale.z = 0.004f;
 
 	//幅、高さ設定
 	radius = 0.5f;

@@ -479,7 +479,7 @@ void Player::CollisionPlayerVsEnemies()
 		
 				break;
 			case Enemy::Slime:
-				SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGameOver));
+				//SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGameOver));
 				break;
 
 			default:
