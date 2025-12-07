@@ -35,8 +35,8 @@ std::vector<DirectX::XMFLOAT3> enemySpawnPoints = {
 };
 //policeポジ
 std::vector<DirectX::XMFLOAT3> enemyPoliceSpawnPoints = {
-	//{ 75.375f, 0.0f, 66.5f },
-	{ 75.375f, 0.0f, 5.5f },
+	{ 75.375f, 0.0f, 66.5f },
+	//{ 75.375f, 0.0f, 5.5f },
 	{ -79.122f, 0.0f, 95.7f }, // 交差２
 };
 
