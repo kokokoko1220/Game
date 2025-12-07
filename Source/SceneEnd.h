@@ -2,13 +2,14 @@
 
 #include "Graphics/Sprite.h"
 #include "Scene.h"
+#include"GameUI.h"
 //タイトルシーン
 class SceneEnd :public Scene
 {
 public:
 	SceneEnd() {}
 	~SceneEnd() override {}
-
+	
 	//初期化
 	void Initialize() override;
 
@@ -23,7 +24,10 @@ public:
 
 	//GUI描画
 	void DrawGUI() override;
-
+	explicit SceneEnd(float finalTimeSec = 0.0f) : finalTime(finalTimeSec) {}
 private:
+	GameUI* ui;
 	Sprite* sprite = nullptr;
+	Sprite* face = nullptr; // ← 追加：等幅フォント画像（ASCII）
+	float finalTime = 0.0f;
 };

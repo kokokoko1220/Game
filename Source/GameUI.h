@@ -26,6 +26,7 @@ public:
     bool cool_time_switch = false;
     bool start_switch = false;
     SceneGame* game = nullptr;
+    float gametimer = 0;
 private:
     //std::unique_ptr<Sprite> sprite; // à¿ëSÇ»RAIIä«óù
     Sprite* sprite = nullptr;
@@ -46,7 +47,9 @@ private:
     float Density = 0;
     float gauge_UP;
     float time = 0;
-
+   
+    bool count_swich = false;
+    bool stop = false;
     float arrowAngle = 0.0f;
     bool  arrowVisible = false;
     Player* player = nullptr;

@@ -16,6 +16,7 @@
 #include"SceneLoading.h"
 #include"SceneGame.h"
 #include"SoundManager.h"
+#include"SceneEnd.h"
 using namespace DirectX;
 
 namespace {
@@ -192,11 +193,14 @@ void GameUI::Update(float elapsedTime)
     }
     if (clearcount > game->clear)
     {
+        stop = true;
         Density += static_cast<float>(1.5 * elapsedTime);
         if (Density >= 1)
         {
+            
             SoundManager::Instance().StopAll();
-            SceneManager::Instance().ChangeScene(new SceneLoading(new SceneEnd));
+            auto end = new SceneEnd(gametimer);                 // ← 値渡し
+            SceneManager::Instance().ChangeScene(new SceneLoading(end));
         }
     }
     timer += static_cast<float>(elapsedTime * 2);
@@ -208,8 +212,10 @@ void GameUI::Update(float elapsedTime)
 
     // ★ 小数点を切り上げて「3,2,1,0」に変換
     displayCount = static_cast<int>(ceil(remaining));
-
-
+    if (count_swich==true&&stop==false)
+    {
+        gametimer += elapsedTime;
+    }
 }
 
 
@@ -302,6 +308,7 @@ void GameUI::Render()
             0,
             1, 1, 1, 1);
         start_switch = true;
+        count_swich = true;
         break;
     case 0:
         break;
@@ -359,6 +366,13 @@ void GameUI::Render()
             iteam
         );
         face->textout(dc, buf, screenWidth / 2 - 30, screenHeight - 45, 50, 50, 1, 1, 1, 1);
+
+        std::snprintf(buf, sizeof(buf),
+            "%.2f",
+            gametimer
+        );
+
+        face->textout(dc, buf, 120, 0, 50, 50, 1, 1, 1, 1);
         // 例：タイトルも出す
        // face->textout(dc, "POWER", textX, textY - 20.0f, cellW, cellH, 1, 1, 1, 1);
     }

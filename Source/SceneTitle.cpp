@@ -48,6 +48,7 @@ void SceneTitle::Update(float elapsedTime)
 		SoundManager::Instance().StopAll();
 		//SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTutorial));
 		SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTutorial));
+
 	}
 
 }
