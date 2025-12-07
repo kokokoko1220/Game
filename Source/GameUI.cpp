@@ -15,6 +15,7 @@
 #include"SceneEnd.h"
 #include"SceneLoading.h"
 #include"SceneGame.h"
+#include"SoundManager.h"
 using namespace DirectX;
 
 namespace {
@@ -194,6 +195,7 @@ void GameUI::Update(float elapsedTime)
         Density += static_cast<float>(1.5 * elapsedTime);
         if (Density >= 1)
         {
+            SoundManager::Instance().StopAll();
             SceneManager::Instance().ChangeScene(new SceneLoading(new SceneEnd));
         }
     }

@@ -84,7 +84,9 @@ void SceneGame::Initialize()
 	/*SoundManager::Instance().Load("BGM", "Data/Audio/BGM.wav");
 	SoundManager::Instance().Load("SE", "Data/Audio/SE.wav");*/
 	SoundManager::Instance().Initialize();
-	 SoundManager::Instance().LoadSE("BGM", L"Data/Audio/BGM.wav");
+	
+	SoundManager::Instance().LoadSE("BGM", L"Data/Audio/BGM.wav");
+	SoundManager::Instance().PlaySELoop("BGM", 0.5f);
     SoundManager::Instance().LoadSE("SE",  L"Data/Audio/SE.wav");
 	//ステージ初期化
 	stage = new Stage();
@@ -197,6 +199,7 @@ void SceneGame::Initialize()
 	//Player::Instance().SetUI(gameUI);kokoko
 	player->SetUI(gameUI);	//kokokoko
 	gameUI->SetPlayer(player);
+	
 }
 
 // 終了化

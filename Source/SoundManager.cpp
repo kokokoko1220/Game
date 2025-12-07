@@ -102,8 +102,8 @@ void SoundManager::LoadSE(const std::string& key, const std::wstring& filepath) 
     sounds[key] = std::move(sd);
 }
 
-// --------- 再生（多重再生OK） ---------
 void SoundManager::PlaySE(const std::string& key, float volume) {
+    if (suspended_) return;
     auto it = sounds.find(key);
     if (it == sounds.end() || !xAudio) return;
 
@@ -111,7 +111,6 @@ void SoundManager::PlaySE(const std::string& key, float volume) {
     if (sd.fmtBytes.empty() || sd.buffer.empty()) return;
 
     const WAVEFORMATEX* wf = reinterpret_cast<const WAVEFORMATEX*>(sd.fmtBytes.data());
-
     IXAudio2SourceVoice* sv = nullptr;
     if (FAILED(xAudio->CreateSourceVoice(&sv, wf))) return;
 
@@ -125,4 +124,51 @@ void SoundManager::PlaySE(const std::string& key, float volume) {
     if (FAILED(sv->Start())) { sv->DestroyVoice(); return; }
 
     activeVoices.push_back(sv);
+    voicesByKey[key].push_back(sv);           // ★ ココ
+}
+
+void SoundManager::PlaySELoop(const std::string& key, float volume) {
+    if (suspended_) return;
+    auto it = sounds.find(key);
+    if (it == sounds.end() || !xAudio) return;
+
+    const auto& sd = it->second;
+    if (sd.fmtBytes.empty() || sd.buffer.empty()) return;
+
+    const WAVEFORMATEX* wf = reinterpret_cast<const WAVEFORMATEX*>(sd.fmtBytes.data());
+    IXAudio2SourceVoice* sv = nullptr;
+    if (FAILED(xAudio->CreateSourceVoice(&sv, wf))) return;
+
+    XAUDIO2_BUFFER buf{};
+    buf.AudioBytes = static_cast<UINT32>(sd.buffer.size());
+    buf.pAudioData = sd.buffer.data();
+    buf.LoopBegin = 0;
+    buf.LoopLength = 0;
+    buf.LoopCount = XAUDIO2_LOOP_INFINITE;
+    buf.Flags = XAUDIO2_END_OF_STREAM;
+
+    sv->SetVolume(volume);
+    if (FAILED(sv->SubmitSourceBuffer(&buf))) { sv->DestroyVoice(); return; }
+    if (FAILED(sv->Start())) { sv->DestroyVoice(); return; }
+
+    activeVoices.push_back(sv);
+    voicesByKey[key].push_back(sv);           // ★ ココ
+}
+
+void SoundManager::StopByKey(const std::string& key) {
+    auto it = voicesByKey.find(key);
+    if (it == voicesByKey.end()) return;
+
+    auto& vec = it->second;
+    for (auto* sv : vec) {
+        if (!sv) continue;
+        sv->Stop(0);
+        sv->FlushSourceBuffers();
+        sv->DestroyVoice();
+        // activeVoices 側からも取り除く
+        auto ait = std::find(activeVoices.begin(), activeVoices.end(), sv);
+        if (ait != activeVoices.end()) activeVoices.erase(ait);
+    }
+    vec.clear();
+    voicesByKey.erase(it);
 }

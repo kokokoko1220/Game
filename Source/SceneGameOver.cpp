@@ -5,13 +5,16 @@
 #include "SceneLoading.h"
 #include "SceneTitle.h"
 #include"Camera.h"
-
+#include"SoundManager.h"
 //初期化
 void SceneGameOver::Initialize()
 {
 
 	//スプライト初期化
 	sprite = new Sprite("Data/Sprite/GameOver.png");
+	SoundManager::Instance().Initialize();
+	SoundManager::Instance().LoadSE("title", L"Data/Audio/Gameover.wav");
+	SoundManager::Instance().PlaySELoop("title", 0.5f);
 }
 
 //終了化
@@ -39,6 +42,7 @@ void SceneGameOver::Update(float elapsedTime)
 		;
 	if (gamePad.GetButtonDown() & anyButton)
 	{
+		SoundManager::Instance().StopAll();
 		SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTitle));
 	}
 }

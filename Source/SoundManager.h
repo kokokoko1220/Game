@@ -29,7 +29,8 @@ public:
     void LoadBGM(const std::string&, const std::wstring&) {}
     void PlayBGM(const std::string&, float = 1.0f) {}
     void StopBGM(const std::string&) {}
-
+    void PlaySELoop(const std::string& key, float volume = 1.0f);
+    void StopByKey(const std::string& key);
 private:
     SoundManager() = default;
 
@@ -49,4 +50,8 @@ private:
 
     // 再生中の SourceVoice を保持（Update で掃除）
     std::vector<IXAudio2SourceVoice*> activeVoices;
+
+    // 再生中ボイスをキー別に管理
+    std::unordered_map<std::string, std::vector<IXAudio2SourceVoice*>> voicesByKey;
+
 };

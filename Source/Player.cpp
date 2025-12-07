@@ -12,7 +12,7 @@
 #include "SceneGameOver.h"
 #include <Stage.h>
 #include"GameUI.h"
-
+#include"SoundManager.h"
 
 template <typename T>
 T clamp(T value, T minVal, T maxVal)
@@ -83,7 +83,8 @@ void Player::Update(float elapsedTime) {
 	//if (DeleteCount == 3 && position.x > 12 || HP == 0)
 	if (HP == 0)//kokoko//enemyにぶつかってHP減った時だけに変更
 	{
-		SceneManager::Instance().ChangeScene(new SceneLoading(new SceneEnd));
+		SoundManager::Instance().StopAll();
+		SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGameOver));
 	}
 
 	raycast_counter++;
