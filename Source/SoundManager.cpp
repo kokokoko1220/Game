@@ -34,6 +34,22 @@ void SoundManager::Finalize() {
     CoUninitialize();
 }
 
+void SoundManager::Update() {
+    // 再生が終わった SourceVoice を破棄
+    for (size_t i = 0; i < activeVoices.size(); ) {
+        IXAudio2SourceVoice* sv = activeVoices[i];
+        XAUDIO2_VOICE_STATE st{};
+        sv->GetState(&st, XAUDIO2_VOICE_NOSAMPLESPLAYED);
+        if (st.BuffersQueued == 0) {
+            sv->DestroyVoice();
+            activeVoices.erase(activeVoices.begin() + i);
+        }
+        else {
+            ++i;
+        }
+    }
+}
+
 // ---------------- WAV ロード（拡張WAV対応） ----------------
 void SoundManager::LoadSE(const std::string& key, const std::wstring& filepath) {
     std::ifstream file(filepath, std::ios::binary);
@@ -98,37 +114,26 @@ struct VoiceCallback : public IXAudio2VoiceCallback {
 
 void SoundManager::PlaySE(const std::string& key, float volume) {
     auto it = sounds.find(key);
-    if (it == sounds.end() || !xAudio) { DBG("PlaySE: not found or xAudio null"); return; }
+    if (it == sounds.end() || !xAudio) return;
 
-    const SoundData& sd = it->second;
-    if (sd.fmtBytes.empty() || sd.buffer.empty()) { DBG("PlaySE: empty data"); return; }
+    const auto& sd = it->second;
+    if (sd.fmtBytes.empty() || sd.buffer.empty()) return;
 
-    // WAVEFORMATEX/WAVEFORMATEXTENSIBLE どちらでもOK：先頭は WAVEFORMATEX と互換
     const WAVEFORMATEX* wf = reinterpret_cast<const WAVEFORMATEX*>(sd.fmtBytes.data());
 
-    auto* cb = new VoiceCallback(); // 自殺コールバック
     IXAudio2SourceVoice* sv = nullptr;
-
-    HRESULT hr = xAudio->CreateSourceVoice(&sv, wf, 0, XAUDIO2_DEFAULT_FREQ_RATIO, cb);
-    if (FAILED(hr)) {
-        DBG("CreateSourceVoice failed");
-        delete cb;
-        return;
-    }
-
-    auto* ctx = new VoiceContext();
-    ctx->voice = sv;
+    if (FAILED(xAudio->CreateSourceVoice(&sv, wf))) return;
 
     XAUDIO2_BUFFER buf{};
     buf.AudioBytes = static_cast<UINT32>(sd.buffer.size());
     buf.pAudioData = sd.buffer.data();
     buf.Flags = XAUDIO2_END_OF_STREAM;
-    buf.pContext = ctx;
 
     sv->SetVolume(volume);
-    hr = sv->SubmitSourceBuffer(&buf);
-    if (FAILED(hr)) { DBG("SubmitSourceBuffer failed"); sv->DestroyVoice(); delete ctx; delete cb; return; }
+    if (FAILED(sv->SubmitSourceBuffer(&buf))) { sv->DestroyVoice(); return; }
+    if (FAILED(sv->Start())) { sv->DestroyVoice(); return; }
 
-    hr = sv->Start();
-    if (FAILED(hr)) { DBG("SourceVoice Start failed"); sv->DestroyVoice(); delete ctx; delete cb; return; }
+    // ★ 配列に保持（終了は Update で破棄）
+    activeVoices.push_back(sv);
 }
+

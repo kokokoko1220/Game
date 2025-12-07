@@ -3,25 +3,25 @@
 #include <unordered_map>
 #include <vector>
 #include <xaudio2.h>
-#include <mmreg.h>   // WAVEFORMAT 系（保険で追加）
+#include <mmreg.h>
 
 class SoundManager {
 public:
     static SoundManager& Instance();
 
-    // 基本
     void Initialize();
     void Finalize();
 
-    // 効果音（多重再生OK）
     void LoadSE(const std::string& key, const std::wstring& filepath);
     void PlaySE(const std::string& key, float volume = 1.0f);
 
-    // --- 互換用のダミー（以前のコードが呼んでいてもビルドが通るように） ---
-    void Update() {} // 何もしない
-    void LoadBGM(const std::string&, const std::wstring&) {} // 何もしない
-    void PlayBGM(const std::string&, float = 1.0f) {}        // 何もしない
-    void StopBGM(const std::string&) {}                      // 何もしない
+    // ★ ここを空っぽではなく「毎フレーム呼ぶ」清掃処理に変更
+    void Update();
+
+    // 互換のダミーはこのままでもOK
+    void LoadBGM(const std::string&, const std::wstring&) {}
+    void PlayBGM(const std::string&, float = 1.0f) {}
+    void StopBGM(const std::string&) {}
 
 private:
     SoundManager() = default;
@@ -30,9 +30,11 @@ private:
     IXAudio2MasteringVoice* masterVoice = nullptr;
 
     struct SoundData {
-        // ★ ここを変更：拡張WAV対応のため fmt チャンクを丸ごと保持
-        std::vector<BYTE> fmtBytes;   // fmt chunk (WAVEFORMATEX/WAVEFORMATEXTENSIBLE 両対応)
-        std::vector<BYTE> buffer;     // data chunk
+        std::vector<BYTE> fmtBytes;   // fmt チャンク
+        std::vector<BYTE> buffer;     // data チャンク
     };
     std::unordered_map<std::string, SoundData> sounds;
+
+    // ★ アクティブな SourceVoice を保持
+    std::vector<IXAudio2SourceVoice*> activeVoices;
 };
