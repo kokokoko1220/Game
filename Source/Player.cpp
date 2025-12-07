@@ -457,7 +457,7 @@ void Player::CollisionPlayerVsEnemies()
 			enemy->GetRadius(),
 			outPosition))
 		{
-			SoundManager::Instance().PlaySE("HIT");
+			SoundManager::Instance().PlaySE("SMASH");
 		// 押し出し後の位置設定
 			/*enemy->SetPosition(outPosition);*/
 			DirectX::XMFLOAT3 dir = {

@@ -86,6 +86,7 @@ void SceneGame::Initialize()
 	SoundManager::Instance().Initialize();
 	
 	SoundManager::Instance().LoadSE("HIT", L"Data/Audio/瓶をたたく.wav");
+	SoundManager::Instance().LoadSE("SMASH", L"Data/Audio/打撃.wav");
 	SoundManager::Instance().LoadSE("DRINK", L"Data/Audio/飲む.wav");
 	SoundManager::Instance().LoadSE("BGM", L"Data/Audio/BGM.wav");
 	SoundManager::Instance().PlaySELoop("BGM", 0.5f);
