@@ -4,6 +4,7 @@
 #include "Collision.h"
 #include "Graphics/DebugRenderer.h"
 #include "Player.h"   // ★ 角括弧でなくダブルクオート推奨
+#include <SoundManager.h>
 
 void GoalManager::Update(float elapsedTime, Player* player) {   // ★ ヘッダと一致
     // 1) ゴールの個別更新
@@ -82,6 +83,7 @@ void GoalManager::CollisionPlayerVsGoals(Player* player) {  // ★ クラスメンバー
             ppos, prad,
             g->GetPosition(), g->GetRadius()*4,
             dummy)) {
+            SoundManager::Instance().PlaySE("SMASH");
             // 当たったら遅延削除
             Remove(g);
             // ここでスコアやSEなど
