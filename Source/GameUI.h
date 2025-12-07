@@ -2,8 +2,9 @@
 #include <memory>
 #include "Graphics/Sprite.h"
 #include "Scene.h" 
-
+#include"SceneGame.h"
 class Player;
+class SceneGame;
 
 class GameUI :public Scene
 {
@@ -14,6 +15,8 @@ public:
     void DrawGUI();
     void Update(float elapsedTime);
     void SetPlayer(Player* p) { player = p; };
+    void SetGame(SceneGame* g) { game = g; }
+
     float gauge = 1;
     int gauge_MAX = 320 - 50;
     int gauge_MIN = 620 - 32;
@@ -21,6 +24,8 @@ public:
     int clearcount = 0;
     bool gauge_UP_switch = false;
     bool cool_time_switch = false;
+    bool start_switch = false;
+    SceneGame* game = nullptr;
 private:
     //std::unique_ptr<Sprite> sprite; // 安全なRAII管理
     Sprite* sprite = nullptr;
@@ -36,7 +41,7 @@ private:
     Sprite* start = nullptr;
 
     int displayCount;
-    float countdown = 3.0f;  // 3秒カウント
+    float countdown = 4.0f;  // 3秒カウント
     float timer = 0.0f;
     float Density = 0;
     float gauge_UP;

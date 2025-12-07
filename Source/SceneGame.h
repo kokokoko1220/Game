@@ -5,6 +5,14 @@
 #include"CameraController.h"
 #include"GameUI.h"
 // ÉQÅ[ÉÄÉVÅ[Éì
+class GameUI;
+class Player;
+class EnemyManager;
+class ItemManager;
+class GoalManager;
+class Shader;
+class Sprite;
+
 class SceneGame : public Scene
 {
 public:
@@ -24,6 +32,7 @@ public:
 	void Render();
 
 	void DrawGUI() {};
+	int clear = 2;
 private:
 	Stage* stage = nullptr;
 	Player* player = nullptr;

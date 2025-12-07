@@ -60,8 +60,11 @@ void Player::Update(float elapsedTime) {
 
 	drunkenness(elapsedTime);
 	//移動入力処理
-	InputMove(elapsedTime);
-
+	/*InputMove(elapsedTime);*/
+	if (ui->start_switch == true)
+	{
+		InputMove(elapsedTime);
+	}
 	//プレイヤーと敵との衝突処理
 	CollisionPlayerVsEnemies();
 

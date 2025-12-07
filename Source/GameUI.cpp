@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include"Camera.h"
 
+#include <d3d11.h>
 #include <cmath>            // ← atan2f
 #include <cfloat>
 #include <DirectXMath.h>
@@ -13,6 +14,7 @@
 #include"SceneManager.h"
 #include"SceneEnd.h"
 #include"SceneLoading.h"
+#include"SceneGame.h"
 using namespace DirectX;
 
 namespace {
@@ -47,6 +49,7 @@ namespace {
 
 void GameUI::Initialize()
 {
+
     gauge = gauge_MIN;
     // スプライトの生成
     sprite = new Sprite("Data/Sprite/cage.png");
@@ -69,19 +72,28 @@ void GameUI::Initialize()
 
 void GameUI::Finalize()
 {
-    // 安全な解放
-    if (sprite)
-    {
-        delete sprite;
-        sprite = nullptr;
-    }
 
-    if (sprite2)
-    {
-        delete sprite2;
-        sprite2 = nullptr;
-    }
-    if (face) { delete face; face = nullptr; }
+    auto safe_delete = [](Sprite*& p) { if (p) { delete p; p = nullptr; } };
+    auto safe_release = [](IUnknown*& p) { if (p) { p->Release(); p = nullptr; } };
+
+    // Sprite系ぜんぶ
+    safe_delete(sprite);
+    safe_delete(sprite2);
+    safe_delete(sprite3);
+    safe_delete(Bottole);
+    safe_delete(face);
+    safe_delete(white);
+    safe_delete(one);
+    safe_delete(two);
+    safe_delete(three);
+    safe_delete(start);
+
+    // D3D リソース
+    safe_release(reinterpret_cast<IUnknown*&>(alphaBlend));
+    safe_release(reinterpret_cast<IUnknown*&>(blendStateEnable));
+    safe_release(reinterpret_cast<IUnknown*&>(blendStateDisable));
+
+
 }
 
 void GameUI::Update(float elapsedTime)
@@ -177,7 +189,7 @@ void GameUI::Update(float elapsedTime)
             arrowVisible = true;
         }
     }
-    if (clearcount >= 3)
+    if (clearcount > game->clear)
     {
         Density += static_cast<float>(1.5 * elapsedTime);
         if (Density >= 1)
@@ -256,7 +268,7 @@ void GameUI::Render()
 
     switch (displayCount)
     {
-    case 3:
+    case 4:
         // ★ カウントダウン「3」のときの処理
         // 画像1を表示、SE再生など
         three->Render(dc,
@@ -265,7 +277,7 @@ void GameUI::Render()
             1, 1, 1, 1);
         break;
 
-    case 2:
+    case 3:
         // ★ カウントダウン「2」のときの処理
         two->Render(dc,
             screenWidth / 2 - 256, screenHeight / 2 - 256, 512, 512,  // x, y, 幅, 高さ
@@ -273,7 +285,7 @@ void GameUI::Render()
             1, 1, 1, 1);
         break;
 
-    case 1:
+    case 2:
         // ★ カウントダウン「1」のときの処理
         one->Render(dc,
             screenWidth / 2 - 256, screenHeight / 2 - 256, 512, 512,  // x, y, 幅, 高さ
@@ -281,12 +293,15 @@ void GameUI::Render()
             1, 1, 1, 1);
         break;
 
-    case 0:
+    case 1:
         // ★ カウント終了（GO!）
         start->Render(dc,
             screenWidth / 2 - 256, screenHeight / 2 - 256, 512, 512,  // x, y, 幅, 高さ
             0,
             1, 1, 1, 1);
+        start_switch = true;
+        break;
+    case 0:
         break;
     }
 
@@ -329,10 +344,11 @@ void GameUI::Render()
 
         // 文字列を組み立て（ASCIIのみ）
         char buf[128];
-        std::snprintf(buf, sizeof(buf),
-            "%3d/3",
-            clearcount
-        );
+        /* std::snprintf(buf, sizeof(buf),
+             "%3d/%3d",
+             clearcount, game->clear
+         );*/
+        std::snprintf(buf, sizeof(buf), "%d/%d", clearcount, game->clear + 1);
 
         // 白文字で描画（RGBA）
         face->textout(dc, buf, textX, textY, 64, 64, 1, 1, 1, 1);

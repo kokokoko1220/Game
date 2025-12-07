@@ -5,6 +5,7 @@
 #include"Character.h"
 #include"GameUI.h"
 #include"Effect.h"
+class GameUI;
 //ƒvƒŒƒCƒ„[
 class Player : public Character {
 public:

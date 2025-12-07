@@ -56,7 +56,12 @@ std::vector<DirectX::XMFLOAT3> itemSpawnPoints = {
 	{ 60.403f, 0.0f, 37.897f },  // 交差２
 	{ 77.439f, 0.0f, 15.110f }    // 右側
 };
+std::vector<DirectX::XMFLOAT3> goalspawnPoints = {
+	{ 0.0f, 0.0f, 0.0f },   // 家の前（画像①）
+	{ 10.0f, 0.0f, 0.0f },  // 家の前端
+	{ 20.0f, 0.0f, 0.0f }, //車前
 
+};
 // 初期化
 void SceneGame::Initialize()
 {
@@ -140,6 +145,7 @@ void SceneGame::Initialize()
 	gameUI->Initialize();
 	auto& gm = GoalManager::Instance();
 	gm.ui = gameUI;
+	gameUI->SetGame(this); // または game のインスタンス
 	//Player::Instance().SetUI(gameUI);kokoko
 	player->SetUI(gameUI);	//kokokoko
 	gameUI->SetPlayer(player);
