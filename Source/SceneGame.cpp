@@ -211,6 +211,7 @@ void SceneGame::Finalize()
 	CreatureManager::Instance().Clear();
 
 	GoalManager::Instance().Clear();
+	SoundManager::Instance().StopAll();  // ノイズ防止・シーン移動の正しい処理
 	//カメラコントローラー終了化
 	if (cameraController != nullptr) {
 		delete cameraController;
