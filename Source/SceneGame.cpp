@@ -377,23 +377,23 @@ void SceneGame::Render()
 	// 3Dデバッグ描画
 	{
 
-		// プレイヤーデバッグプリミティブ描画
-		Player::Instance().DrawDebugPrimitive();
+		//// プレイヤーデバッグプリミティブ描画
+		//Player::Instance().DrawDebugPrimitive();
 
-		// エネミーデバッグプリミティブ描画
-		EnemyManager::Instance().DrawDebugPrimitive();
+		//// エネミーデバッグプリミティブ描画
+		//EnemyManager::Instance().DrawDebugPrimitive();
 
-		// アイテムデバッグプリミティブ描画
-		ItemManager::Instance().DrawDebugPrimitive();
+		//// アイテムデバッグプリミティブ描画
+		//ItemManager::Instance().DrawDebugPrimitive();
 
-		//物デバッグプリミティブ描画
-		CreatureManager::Instance().DrawDebugPrimitive();
+		////物デバッグプリミティブ描画
+		//CreatureManager::Instance().DrawDebugPrimitive();
 
-		// ラインレンダラ描画実行
-		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
+		//// ラインレンダラ描画実行
+		//graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
 
-		// デバッグレンダラ描画実行
-		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
+		//// デバッグレンダラ描画実行
+		//graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 
 	// 2Dスプライト描画
@@ -406,7 +406,7 @@ void SceneGame::Render()
 	{
 
 	//プレイヤーデバッグ描画
-		Player::Instance().DrawDebugGUI();
+		/*Player::Instance().DrawDebugGUI();*/
 	
 	}
 }
