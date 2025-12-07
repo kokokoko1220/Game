@@ -18,8 +18,11 @@
 #include <algorithm>  // std::shuffle
 #include <numeric>    // (iota使わない版なら不要)
 #include <utility>    // std::swap（今回は未使用だが保険）
-
+#include"SoundManager.h"
 using namespace DirectX;
+
+#pragma comment(lib, "xaudio2.lib")
+
 template <class T>
 inline T MinT(const T& a, const T& b) { return (a < b) ? a : b; }
 float GetRandomFloat(float min, float max)
@@ -75,6 +78,14 @@ std::vector<DirectX::XMFLOAT3> goalspawnPoints = {
 // 初期化
 void SceneGame::Initialize()
 {
+	/*SoundManager::Instance().Initialize();
+	SoundManager::Instance().LoadSE("BGM", "Data/Audio/BGM.wav");
+	SoundManager::Instance().LoadSE("jump", "Data/Audio/SE.wav");*/
+	/*SoundManager::Instance().Load("BGM", "Data/Audio/BGM.wav");
+	SoundManager::Instance().Load("SE", "Data/Audio/SE.wav");*/
+	SoundManager::Instance().Initialize();
+	 SoundManager::Instance().LoadSE("BGM", L"Data/Audio/BGM.wav");
+    SoundManager::Instance().LoadSE("SE",  L"Data/Audio/SE.wav");
 	//ステージ初期化
 	stage = new Stage();
 	player = new Player();
@@ -101,6 +112,8 @@ void SceneGame::Initialize()
 
 	//エネミー初期化
 	EnemyManager& enemyManager = EnemyManager::Instance();
+
+	
 	/*for (int i = 0; i < 2; i++) {
 		Enemycar* car = new Enemycar();
 		car->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
@@ -228,7 +241,7 @@ void SceneGame::Update(float elapsedTime)
 	//ステージ更新処理
 	stage->Update(elapsedTime);
 	
-
+	
 	//プレイヤー更新処理
 	Player::Instance().Update(elapsedTime);
 
@@ -280,6 +293,21 @@ void SceneGame::Update(float elapsedTime)
 		rum->SetPosition({ pos.x, y, pos.z });
 		itemManager.Register(rum);
 	}
+	// 同時再生（押した瞬間だけ）
+	static bool wasB = false, wasC = false;
+	bool isB = (GetAsyncKeyState('B') & 0x8000) != 0;
+	bool isC = (GetAsyncKeyState('C') & 0x8000) != 0;
+
+	if (isB && !wasB)
+	{
+		SoundManager::Instance().PlaySE("BGM");
+	}
+	if (isC && !wasC)
+	{
+		SoundManager::Instance().PlaySE("SE");
+	}
+	wasB = isB; wasC = isC;
+
 
 	//物の更新処理
 	CreatureManager::Instance().Update(elapsedTime);

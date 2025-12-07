@@ -173,6 +173,9 @@
     <ClCompile Include="Source\SceneGameOver.cpp">
       <Filter>Source\Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Effect.cpp" />
+    <ClCompile Include="Source\EffectManager.cpp" />
+    <ClCompile Include="Source\SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imgui.h">
@@ -339,6 +342,9 @@
     <ClInclude Include="Source\SceneGameOver.h">
       <Filter>Source\header</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Effect.h" />
+    <ClInclude Include="Source\EffectManager.h" />
+    <ClInclude Include="Source\SoundManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Debug.hlsli">
