@@ -58,7 +58,17 @@ void Player::Update(float elapsedTime) {
 		axisY = gamePad.GetAxisLY();
 	}
 	
+	// ★ 停止中なら移動処理をスキップ
+	if (stopTimer > 0.0f)
+	{
+		stopTimer -= elapsedTime;
 
+		// モデル行列などは更新したい場合は残す
+		UpdateTransform();
+		model->UpdateTransform(transform);
+
+		return;  // ★ 移動・衝突など一切しない
+	}
 	drunkenness(elapsedTime);
 	//移動入力処理
 	/*InputMove(elapsedTime);*/
@@ -289,7 +299,7 @@ void Player::Reset()
 	position.y = 0.0f;
 	position.z = 0.0f;
 	angle.x = angle.y = angle.z = 0.0f;
-	moveSpeed = 5.0f;
+	moveSpeed = 3.5f;
 	turnSpeed = DirectX::XMConvertToRadians(720);
 	// その他のステータスもリセットが必要
 	// 無敵時間もリセット
@@ -331,7 +341,7 @@ void Player::InputMove(float elapsedTime) {
 	float speedScale = lerp(1.0f, 3.0f, t);   // t=1で最高速3倍
 
 	// 前進/後退の別最高速（後退は遅めに抑える）
-	float maxSpeedFwd = baseMaxSpeed * speedScale;   // 前進最高速
+	float maxSpeedFwd = baseMaxSpeed * speedScale * 0.5f;   // 前進最高速
 	float maxSpeedRev = maxSpeedFwd * 0.4f;          // 後退最高速（40%に設定：好みで）
 	
 	float accelRateNow = baseAccelRate * accelScale;
@@ -485,7 +495,7 @@ void Player::CollisionPlayerVsEnemies()
 		
 				break;
 			case Enemy::Slime:
-				//SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGameOver));
+				stopTimer = 0.5f;   // ★ ここで停止タイマー開始
 				break;
 
 			default:
@@ -513,7 +523,7 @@ void Player::CollisionPlayerVsBottleDelete()
 			item->GetRadius(),
 			outPosition))
 		{// 押し出し後の位置設定
-			moveSpeed += 1.3f;
+			/*moveSpeed += 1.3f;*/
 			item->Destroy();
 			DeleteCount++;
 			SoundManager::Instance().PlaySE("HIT");

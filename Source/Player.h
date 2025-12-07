@@ -116,7 +116,7 @@ private:
 	float grip = 8.0f;             // 横滑りを戻す力
 	float drunkenPower = 0.0f;
 	float accelTime = 4.0f;   // 加速の追従スピード係数（好きな値で調整）
-
+	float stopTimer = 0.0f; // ← Slimeにぶつかった時の停止時間
 	float raycast_counter = 0; // レイキャスト実行を制御するカウンター
 	const float RAYCAST_INTERVAL = 3.7f; // 実行間隔（3.7フレームに1回）
 

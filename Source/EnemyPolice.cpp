@@ -58,7 +58,7 @@ void EnemyPolice::Update(float elapsedTime) {
         float forwardX = sinf(angle.y);
         float forwardZ = cosf(angle.y);
 
-        float moveSpeed = 25.0f;
+        float moveSpeed = 11.0f;
         Move(elapsedTime, forwardX, forwardZ, moveSpeed);
 
         if (!EnemyView())

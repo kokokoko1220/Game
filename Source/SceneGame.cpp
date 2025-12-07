@@ -39,7 +39,7 @@ std::vector<DirectX::XMFLOAT3> enemySpawnPoints = {
 	{ 31.0f, 0.0f, -40.0f },  // 画像②の位置
 	{ -78.0f, -0.861f, -49.77f }, //家の前2 
 	{ -74.0f, -0.877f, 91.987f },  // 曲がり角
-	{ 78.404f, -0.474f, 95.122f }    // 右側奥
+	{ 76.404f, -0.474f, 95.122f }    // 右側奥
 };
 //policeポジ
 std::vector<DirectX::XMFLOAT3> enemyPoliceSpawnPoints = {
