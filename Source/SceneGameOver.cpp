@@ -9,6 +9,7 @@
 //初期化
 void SceneGameOver::Initialize()
 {
+
 	//スプライト初期化
 	sprite = new Sprite("Data/Sprite/GameOver.png");
 }

@@ -14,7 +14,7 @@ public:
 
     void LoadSE(const std::string& key, const std::wstring& filepath);
     void PlaySE(const std::string& key, float volume = 1.0f);
-
+    void StopAll();  // 追加：全ボイス停止＆破棄
     // ★ ここを空っぽではなく「毎フレーム呼ぶ」清掃処理に変更
     void Update();
 
@@ -24,6 +24,7 @@ public:
     void StopBGM(const std::string&) {}
 
 private:
+
     SoundManager() = default;
 
     IXAudio2* xAudio = nullptr;

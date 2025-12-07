@@ -1,16 +1,11 @@
 #include "SoundManager.h"
-#include <windows.h>
-#include <mmreg.h>
+
+#include <Windows.h>   // HRESULT, CoInitializeEx など
 #include <fstream>
 #include <cstring>
 
 #pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "ole32.lib")
-
-static void DBG(const char* msg) {
-    OutputDebugStringA(msg);
-    OutputDebugStringA("\n");
-}
 
 SoundManager& SoundManager::Instance() {
     static SoundManager inst;
@@ -18,24 +13,45 @@ SoundManager& SoundManager::Instance() {
 }
 
 void SoundManager::Initialize() {
-    HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-    if (FAILED(hr)) { DBG("CoInitializeEx failed"); }
-
-    hr = XAudio2Create(&xAudio, 0);
-    if (FAILED(hr)) { DBG("XAudio2Create failed"); return; }
-
-    hr = xAudio->CreateMasteringVoice(&masterVoice);
-    if (FAILED(hr)) { DBG("CreateMasteringVoice failed"); }
+    if (!coinit_) {
+        HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+        coinit_ = SUCCEEDED(hr) || hr == S_FALSE;
+    }
+    if (!xAudio) {
+        if (FAILED(XAudio2Create(&xAudio, 0))) return;
+        if (FAILED(xAudio->CreateMasteringVoice(&masterVoice))) return;
+    }
 }
 
+void SoundManager::StopAll() {
+    // XAudio2 未初期化なら配列だけ掃除
+    if (!xAudio) { activeVoices.clear(); return; }
+
+    // エンジン停止中はコールバック/内部処理が止まる → 破棄が安全
+    xAudio->StopEngine();
+
+    for (auto*& sv : activeVoices) {
+        if (!sv) continue;
+        sv->Stop(0);                // 再生停止
+        sv->FlushSourceBuffers();   // キューを空に
+        sv->DestroyVoice();         // 破棄
+        sv = nullptr;
+    }
+    activeVoices.clear();
+
+    xAudio->StartEngine();          // 復帰
+}
+
+
 void SoundManager::Finalize() {
+    StopAll();
     if (masterVoice) { masterVoice->DestroyVoice(); masterVoice = nullptr; }
     if (xAudio) { xAudio->Release(); xAudio = nullptr; }
-    CoUninitialize();
+    if (coinit_) { CoUninitialize(); coinit_ = false; }
 }
 
 void SoundManager::Update() {
-    // 再生が終わった SourceVoice を破棄
+    if (!xAudio) { activeVoices.clear(); return; }
     for (size_t i = 0; i < activeVoices.size(); ) {
         IXAudio2SourceVoice* sv = activeVoices[i];
         XAUDIO2_VOICE_STATE st{};
@@ -50,17 +66,14 @@ void SoundManager::Update() {
     }
 }
 
-// ---------------- WAV ロード（拡張WAV対応） ----------------
+// --------- WAV ロード（fmt/data をそのまま保持） ---------
 void SoundManager::LoadSE(const std::string& key, const std::wstring& filepath) {
     std::ifstream file(filepath, std::ios::binary);
-    if (!file) { DBG("WAV open failed"); return; }
+    if (!file) return;
 
     struct RIFF { char id[4]; uint32_t size; char wave[4]; } riff{};
     file.read(reinterpret_cast<char*>(&riff), sizeof(riff));
-    if (std::memcmp(riff.id, "RIFF", 4) || std::memcmp(riff.wave, "WAVE", 4)) {
-        DBG("not RIFF/WAVE");
-        return;
-    }
+    if (std::memcmp(riff.id, "RIFF", 4) || std::memcmp(riff.wave, "WAVE", 4)) return;
 
     SoundData sd;
     bool gotFmt = false, gotData = false;
@@ -81,37 +94,15 @@ void SoundManager::LoadSE(const std::string& key, const std::wstring& filepath) 
             gotData = true;
         }
         else {
-            file.seekg(ch.size, std::ios::cur); // スキップ
+            file.seekg(ch.size, std::ios::cur);
         }
     }
 
-    if (!gotFmt || !gotData) {
-        DBG("fmt or data missing");
-        return;
-    }
-
+    if (!gotFmt || !gotData) return;
     sounds[key] = std::move(sd);
-    DBG(("WAV loaded: " + key).c_str());
 }
 
-// ---- 再生コールバック（終端でソースボイス破棄） ----
-struct VoiceContext { IXAudio2SourceVoice* voice = nullptr; };
-
-struct VoiceCallback : public IXAudio2VoiceCallback {
-    void OnVoiceProcessingPassStart(UINT32) override {}
-    void OnVoiceProcessingPassEnd() override {}
-    void OnStreamEnd() override {}
-    void OnBufferStart(void*) override {}
-    void OnBufferEnd(void* pBufferContext) override {
-        auto* ctx = reinterpret_cast<VoiceContext*>(pBufferContext);
-        if (ctx && ctx->voice) ctx->voice->DestroyVoice();
-        delete ctx;
-        delete this;
-    }
-    void OnLoopEnd(void*) override {}
-    void OnVoiceError(void*, HRESULT) override {}
-};
-
+// --------- 再生（多重再生OK） ---------
 void SoundManager::PlaySE(const std::string& key, float volume) {
     auto it = sounds.find(key);
     if (it == sounds.end() || !xAudio) return;
@@ -133,7 +124,5 @@ void SoundManager::PlaySE(const std::string& key, float volume) {
     if (FAILED(sv->SubmitSourceBuffer(&buf))) { sv->DestroyVoice(); return; }
     if (FAILED(sv->Start())) { sv->DestroyVoice(); return; }
 
-    // ★ 配列に保持（終了は Update で破棄）
     activeVoices.push_back(sv);
 }
-
