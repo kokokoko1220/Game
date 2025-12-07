@@ -44,7 +44,7 @@ void SceneTitle::Update(float elapsedTime)
 	if (gamePad.GetButtonDown() & anyButton)
 	{
 		// 1) ƒ^ƒCƒgƒ‹BGM‚¾‚¯Ž~‚ß‚é
-		\
+		
 		SoundManager::Instance().StopAll();
 		//SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTutorial));
 		SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTutorial));

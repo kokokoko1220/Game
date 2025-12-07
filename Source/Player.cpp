@@ -40,6 +40,7 @@ Player::Player()
 	position.x = 73.0f;
 	HP = 3;
 	hitEffect = new Effect("Data/Effect/Hit.efk");//effect
+	
 }
 
 //デストラクタ
@@ -446,6 +447,7 @@ void Player::CollisionPlayerVsEnemies()
 			enemy->GetRadius(),
 			outPosition))
 		{
+			SoundManager::Instance().PlaySE("HIT");
 		// 押し出し後の位置設定
 			/*enemy->SetPosition(outPosition);*/
 			DirectX::XMFLOAT3 dir = {
@@ -514,6 +516,7 @@ void Player::CollisionPlayerVsBottleDelete()
 			moveSpeed += 1.3f;
 			item->Destroy();
 			DeleteCount++;
+			SoundManager::Instance().PlaySE("HIT");
 			/*ui->gauge_UP_switch = true;
 			ui->cool_time_switch = false;*/
 			ui->iteam++;//kokokok

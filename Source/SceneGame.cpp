@@ -65,14 +65,14 @@ std::vector<DirectX::XMFLOAT3> itemSpawnPoints = {
 	{ 77.439f, 0.0f, 15.110f }    // 右側
 };
 std::vector<DirectX::XMFLOAT3> goalspawnPoints = {
-	{ -70.0f, 0.0f, -62.0f },   // 家の前（画像①）
-	{ 67.0f, 0.0f, -70.0f },  // 家の前端
-	{ 95.0f, 0.0f, 73.0f }, //車前
-	{95.0f,0.0f,105.0f},
-	{7.0f,0.0f,110.0f},
-	{-143.0f,0.0f,110.0f},
-	{-122.0f,0.0f,45.0f},
-	{ -70.0f,0.0f,-48.0f}
+	{ -70.0f, -0.3f, -62.0f },   // 家の前（画像①）
+	{ 67.0f, -0.3f, -70.0f },  // 家の前端
+	{ 95.0f, -0.3f, 73.0f }, //車前
+	{95.0f,-0.3f,105.0f},
+	{7.0f,-0.3f,110.0f},
+	{-143.0f,-0.3f,110.0f},
+	{-122.0f,-0.3f,45.0f},
+	{ -70.0f,-0.3f,-48.0f}
 
 };
 // 初期化
@@ -85,9 +85,12 @@ void SceneGame::Initialize()
 	SoundManager::Instance().Load("SE", "Data/Audio/SE.wav");*/
 	SoundManager::Instance().Initialize();
 	
+	SoundManager::Instance().LoadSE("HIT", L"Data/Audio/瓶をたたく.wav");
+	SoundManager::Instance().LoadSE("DRINK", L"Data/Audio/飲む.wav");
 	SoundManager::Instance().LoadSE("BGM", L"Data/Audio/BGM.wav");
 	SoundManager::Instance().PlaySELoop("BGM", 0.5f);
     SoundManager::Instance().LoadSE("SE",  L"Data/Audio/SE.wav");
+
 	//ステージ初期化
 	stage = new Stage();
 	player = new Player();

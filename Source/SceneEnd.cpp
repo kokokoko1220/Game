@@ -6,12 +6,16 @@
 #include "SceneTitle.h"
 #include"Camera.h"
 #include"GameUI.h"
+#include"SoundManager.h"
 //初期化
 void SceneEnd::Initialize()
 {
 	//スプライト初期化
 	sprite = new Sprite("Data/Sprite/GameClear.png");
 	face = new Sprite("Data/Font/font1.png");   // ← 追加
+    SoundManager::Instance().Initialize();
+    SoundManager::Instance().LoadSE("title", L"Data/Audio/gole.wav");
+    SoundManager::Instance().PlaySELoop("title", 0.5f);
 }
 
 //終了化
@@ -40,6 +44,7 @@ void SceneEnd::Update(float elapsedTime)
 		;
 	if (gamePad.GetButtonDown() & anyButton)
 	{
+        SoundManager::Instance().StopAll();
 		SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTitle));
 	}
 }

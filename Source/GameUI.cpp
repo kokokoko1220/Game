@@ -51,7 +51,7 @@ namespace {
 
 void GameUI::Initialize()
 {
-
+   
     gauge = gauge_MIN;
     // スプライトの生成
     sprite = new Sprite("Data/Sprite/cage.png");
@@ -110,7 +110,7 @@ void GameUI::Update(float elapsedTime)
     {
         // スペース押した瞬間の処理
 
-
+        SoundManager::Instance().PlaySE("DRINK");
         gauge_UP_switch = true;
         cool_time_switch = false;
         --iteam;
