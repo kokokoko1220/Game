@@ -15,8 +15,13 @@
 #include"GoalManager.h"
 #include <vector>
 #include <random> 
+#include <algorithm>  // std::shuffle
+#include <numeric>    // (iota使わない版なら不要)
+#include <utility>    // std::swap（今回は未使用だが保険）
 
 using namespace DirectX;
+template <class T>
+inline T MinT(const T& a, const T& b) { return (a < b) ? a : b; }
 float GetRandomFloat(float min, float max)
 {
 	static std::random_device rd;
@@ -57,9 +62,14 @@ std::vector<DirectX::XMFLOAT3> itemSpawnPoints = {
 	{ 77.439f, 0.0f, 15.110f }    // 右側
 };
 std::vector<DirectX::XMFLOAT3> goalspawnPoints = {
-	{ 0.0f, 0.0f, 0.0f },   // 家の前（画像①）
-	{ 10.0f, 0.0f, 0.0f },  // 家の前端
-	{ 20.0f, 0.0f, 0.0f }, //車前
+	{ -70.0f, 0.0f, -62.0f },   // 家の前（画像①）
+	{ 67.0f, 0.0f, -70.0f },  // 家の前端
+	{ 95.0f, 0.0f, 73.0f }, //車前
+	{95.0f,0.0f,105.0f},
+	{7.0f,0.0f,110.0f},
+	{-143.0f,0.0f,110.0f},
+	{-122.0f,0.0f,45.0f},
+	{ -70.0f,0.0f,-48.0f}
 
 };
 // 初期化
@@ -133,13 +143,38 @@ void SceneGame::Initialize()
 	}
 	player = &Player::Instance();
 	//配達位置
-	GoalManager& goalManager = GoalManager::Instance();
+	/*GoalManager& goalManager = GoalManager::Instance();
 	for (int i = 0; i <= 2; i++)
 	{
 		Goal* goal = new Goal();
 		goal->SetPosition(DirectX::XMFLOAT3(i * 10 - 10, 0, 0));
 		goalManager.Register(goal);
+	}*/
+	// 配達位置（Goal）をランダムに 3 つ生成
+	GoalManager& goalManager = GoalManager::Instance();
+
+	// まずインデックスを作る
+	std::vector<int> indices(goalspawnPoints.size());
+	std::iota(indices.begin(), indices.end(), 0);  // 0,1,2,... を自動生成
+
+	// シャッフル（ランダム化）
+	static std::mt19937 gen(std::random_device{}());
+	std::shuffle(indices.begin(), indices.end(), gen);
+
+	// 取得数を 3 個に制限（配列のサイズが 3 未満ならある分だけ）
+	int spawnCount = MinT(3, (int)indices.size());
+
+	// ランダムに選んだ位置へ Goal を生成
+	for (int i = 0; i < spawnCount; i++)
+	{
+		int idx = indices[i];
+		const DirectX::XMFLOAT3& pos = goalspawnPoints[idx];
+
+		Goal* goal = new Goal();
+		goal->SetPosition(pos);
+		goalManager.Register(goal);
 	}
+
 	// UI ������ď�����
 	gameUI = new GameUI();
 	gameUI->Initialize();
