@@ -9,7 +9,7 @@ Goal::Goal() {
     model = new Model("Data/Model/Man/KCG.mdl");
     
     // モデルが巨大なのでまずは強制縮小（必要に応じて調整）
-    scale.x = scale.y = scale.z = 0.01f;   // ← ここだけ触ればサイズ調整できます
+    scale.x = scale.y = scale.z = 0.004f;  // ← ここだけ触ればサイズ調整できます
     angle = { 0, 0, 0 };                     // Zだけ25度傾ける（不要なら0）
 }
 

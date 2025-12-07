@@ -461,9 +461,9 @@ void Player::CollisionPlayerVsEnemies()
 			}
 
 			// ノックバック速度
-			enemy->knockbackVel.x = dir.x * 3000.0f;  // 強さは調整
+			enemy->knockbackVel.x = dir.x * 300.0f;  // 強さは調整
 			enemy->knockbackVel.y = 0.0f;          // 今はXZだけ
-			enemy->knockbackVel.z = dir.z * 3000.0f;
+			enemy->knockbackVel.z = dir.z * 300.0f;
 
 			// ノックバック時間
 			enemy->knockbackTimer = 0.5f; // 0.5秒ノックバック
