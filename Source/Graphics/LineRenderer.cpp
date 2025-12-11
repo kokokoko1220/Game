@@ -10,7 +10,7 @@ LineRenderer::LineRenderer(ID3D11Device* device, UINT vertexCount)
 	{
 		// ファイルを開く
 		FILE* fp = nullptr;
-		fopen_s(&fp, "Shader\\LineVS.cso", "rb");
+		fopen_s(&fp, "Data\\Shader\\LineVS.cso", "rb");
 		_ASSERT_EXPR_A(fp, "CSO File not found");
 
 		// ファイルのサイズを求める
@@ -41,7 +41,7 @@ LineRenderer::LineRenderer(ID3D11Device* device, UINT vertexCount)
 	{
 		// ファイルを開く
 		FILE* fp = nullptr;
-		fopen_s(&fp, "Shader\\LinePS.cso", "rb");
+		fopen_s(&fp, "Data\\Shader\\LinePS.cso", "rb");
 		_ASSERT_EXPR_A(fp, "CSO File not found");
 
 		// ファイルのサイズを求める

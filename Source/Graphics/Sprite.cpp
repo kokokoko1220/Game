@@ -58,7 +58,7 @@ Sprite::Sprite(const char* filename)
 	{
 		// ファイルを開く
 		FILE* fp = nullptr;
-		fopen_s(&fp, "Shader\\SpriteVS.cso", "rb");
+		fopen_s(&fp, "Data\\Shader\\SpriteVS.cso", "rb");
 		_ASSERT_EXPR_A(fp, "CSO File not found");
 
 		// ファイルのサイズを求める
@@ -90,7 +90,7 @@ Sprite::Sprite(const char* filename)
 	{
 		// ファイルを開く
 		FILE* fp = nullptr;
-		fopen_s(&fp, "Shader\\SpritePS.cso", "rb");
+		fopen_s(&fp, "Data\\Shader\\SpritePS.cso", "rb");
 		_ASSERT_EXPR_A(fp, "CSO File not found");
 
 		// ファイルのサイズを求める
