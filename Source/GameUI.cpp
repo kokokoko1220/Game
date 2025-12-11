@@ -5,7 +5,7 @@
 #include"Camera.h"
 
 #include <d3d11.h>
-#include <cmath>            // ← atan2f
+#include <cmath>          
 #include <cfloat>
 #include <DirectXMath.h>
 #include "Goal.h"
@@ -66,9 +66,8 @@ void GameUI::Initialize()
     two = new Sprite("Data/Sprite/2.png");
     three = new Sprite("Data/Sprite/3.png");
     start = new Sprite("Data/Sprite/start.png");
-    // ★ フォントを追加（これだけで文字がくっきり表示されます）
-    //ImGuiIO& io = ImGui::GetIO();
-   // io.Fonts->AddFontFromFileTTF("Data/Font/MyFont.ttf", 32.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+ 
+   
 
 }
 
@@ -134,15 +133,7 @@ void GameUI::Update(float elapsedTime)
             time = 0;
         }
     }
-    /*if (cool_time_switch == false)
-    {
-        cool_time += static_cast<float>(elapsedTime);
-        if (cool_time >= 5)
-        {
-            cool_time_switch = true;
-            cool_time = 0;
-        }
-    }*/
+ 
     if (gauge >= gauge_MIN)
     {
         gauge = gauge_MIN;
@@ -259,7 +250,7 @@ void GameUI::Render()
     // スプライト描画
     //=============================================
 
-    // cage.png
+   
     sprite->Render(dc,
         screenWidth - 64, 300, 84, 320,  // x, y, 幅, 高さ
         0,
@@ -314,24 +305,16 @@ void GameUI::Render()
         break;
     }
 
-    /* sprite3->Render(dc,
-         screenWidth / 2, 0, 64, 64,
-         0,
-         1, 1, 1, 1);*/
 
     if (arrowVisible) {
         const float cx = screenWidth * 0.5f;
         const float cy = screenHeight * 0.15f; // 画面上部に出す例
-        //sprite3->Render(dc, cx, cy, 64, 64, arrowAngle, 1, 1, 1, 1);
+       
         // 度に変換して渡す（試してみてください）
         float angleDeg = arrowAngle * 180.0f / DirectX::XM_PI;
         sprite3->Render(dc, cx, cy, 64, 64, angleDeg, 1, 1, 1, 1);
     }
-    //if (arrowVisible && sprite3) {
-    //    float cx = screenWidth * 0.5f;
-    //    float cy = screenHeight * 0.12f; // 上辺付近
-    //    sprite3->Render(dc, cx, cy, 64, 64, arrowAngle, 1, 1, 1, 1);
-    //}
+
 
 
 
@@ -353,10 +336,7 @@ void GameUI::Render()
 
         // 文字列を組み立て（ASCIIのみ）
         char buf[128];
-        /* std::snprintf(buf, sizeof(buf),
-             "%3d/%3d",
-             clearcount, game->clear
-         );*/
+      
         std::snprintf(buf, sizeof(buf), "%d/%d", clearcount, game->clear + 1);
 
         // 白文字で描画（RGBA）
@@ -373,8 +353,7 @@ void GameUI::Render()
         );
 
         face->textout(dc, buf, 120, 0, 50, 50, 1, 1, 1, 1);
-        // 例：タイトルも出す
-       // face->textout(dc, "POWER", textX, textY - 20.0f, cellW, cellH, 1, 1, 1, 1);
+       
     }
 
 

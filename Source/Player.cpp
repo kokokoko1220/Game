@@ -29,17 +29,15 @@ T lerp(T a, T b, T t)
 //コンストラクタ
 Player::Player()
 {
-	//model = new Model("Data/Model/Mr.Incredible/Mr.Incredible.mdl");
-	model = new Model("Data/Model/Scooter/alcS.mdl");//koko//キャラクターモデル
-	//model = new Model("Data/Model/Scooter/scooter.mdl");//koko//キャラクターモデル
-	//model = new Model("Data/Model/Ptcar/Ptcar2.mdl");//koko//パトカー
-	//model = new Model("Data/Model/DustBox/Dust1.mdl");//koko//ゴミ箱
+	
+	model = new Model("Data/Model/Scooter/alcS.mdl");//キャラクターモデル
+	
 	//モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.004f;
-	//scale.x = scale.y = scale.z = 0.01f;
+	
 	position.x = 73.0f;
 	HP = 3;
-	hitEffect = new Effect("Data/Effect/Hit.efk");//effect
+	hitEffect = new Effect("Data/Effect/Hit.efk");
 	
 }
 
@@ -91,7 +89,7 @@ void Player::Update(float elapsedTime) {
 	PlayerDamage(elapsedTime);
 
 	//クリア判定　条件は後ほど変えることを前提
-	//if (DeleteCount == 3 && position.x > 12 || HP == 0)
+	
 	if (HP == 0)//kokoko//enemyにぶつかってHP減った時だけに変更
 	{
 		SoundManager::Instance().StopAll();
@@ -114,13 +112,7 @@ void Player::Update(float elapsedTime) {
 			position.y = hit.position.y; // 地面に吸着
 		}
 	}
-	//// 足元にレイを飛ばして地面の高さを取得
-	//HitResult hit;
-	//DirectX::XMFLOAT3 start = { position.x, position.y + 1.0f, position.z };
-	//DirectX::XMFLOAT3 end = { position.x, position.y - 100.0f, position.z };
-	//if (Stage::Instance().RayCast(start, end, hit)) {
-	//	position.y = hit.position.y; // 地面に吸着
-	//}
+	
 }
 
 //描画処理
@@ -133,8 +125,7 @@ void Player::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
-	//衝突判定用のデバック球を描画
-	//debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4{ 0,0,0,1 });
+	
 
 	//衝突判定用のデバック円柱を描画
 	debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
@@ -177,47 +168,7 @@ void Player::DrawDebugGUI() {
 //スティック入力値から移動ベクトルを取得
 DirectX::XMFLOAT3 Player::GetMoveVec() const {
 
-	////入力情報を取得
-	//GamePad& gamePad = Input::Instance().GetGamePad();
-	//float ax = gamePad.GetAxisLX();
-	//float ay = gamePad.GetAxisLY();
 
-	////カメラ方向とスティックの入力値によって進行方向を計算する
-	//Camera& camera = Camera::Instance();
-	//const DirectX::XMFLOAT3& cameraRight = camera.GetRight();
-	//const DirectX::XMFLOAT3& cameraFront = camera.GetFront();
-	//
-	////移動ベクトルはXZ平面に水平なベクトルになるようにする
-	//
-	////カメラ右方向ベクトルをXZ単位ベクトルに変換
-	//float cameraRightX = cameraRight.x;
-	//float cameraRightZ = cameraRight.z;
-	//float cameraRightLength = sqrtf(cameraRightX * cameraRightX + cameraRightZ * cameraRightZ);
-	//
-	//if (cameraRightLength > 0.0f) {
-	//	//単位ベクトル化
-	//	cameraRightX /= cameraRightLength;
-	//	cameraRightZ /= cameraRightLength;
-	//}
-	////カメラ前方向ベクトルをXZベクトルに変換
-	//float cameraFrontX = cameraFront.x;
-	//float cameraFrontZ = cameraFront.z;
-
-	//float cameraFrontLength = sqrtf(cameraFrontX * cameraFrontX + cameraFrontZ * cameraFrontZ);
-	//if (cameraFrontLength > 0.0f) {
- //    //単位ベクトル化
-	//	cameraFrontX /= cameraFrontLength;
-	//	cameraFrontZ /= cameraFrontLength;
-	//}
-	////スティックの水平入力をカメラ右方向に反映し、
-	////スティックの垂直入力値をカメラ前方向に反映し、
-	////進行ベクトルを計算する
-	//DirectX::XMFLOAT3 vec;
-	//vec.x = (cameraRightX * ax) + (cameraFrontX * ay);
-	//vec.z = (cameraRightZ * ax) + (cameraFrontZ * ay);
-	////Y軸方向には移動しない
-	//vec.y = 0.0f;
-	//	return vec;
 	float ax = axisX;  // ← メンバーを使う！
 	float ay = axisY;
 
@@ -240,56 +191,7 @@ DirectX::XMFLOAT3 Player::GetMoveVec() const {
 	return v;
 }
 
-////移動処理
-//void Player::Move(float elapsedTime, float vx, float vz, float speed) {
-//	speed *= elapsedTime;
-//	position.x += vx * speed;
-//	position.z += vz * speed;
-//}
-//
-//void Player::Turn(float elapsedTime, float vx, float vz, float speed) {
-//	speed += elapsedTime;
-//
-//	//進行ベクトルがゼロベクトルの場合は処理する必要なし
-//	float length = sqrtf(vx * vx + vz * vz);
-//	if (length < 0.001f)return;
-//
-//	//進行ベクトルを単位ベクトル化
-//	vx /= length;
-//	vz /= length;
-//
-//	//自身の回転値から前方向を求める
-//	float frontX = sinf(angle.y);
-//	float frontZ = cosf(angle.y);
-//
-//
-//	//回転角を求める為、2つの単位ベクトルの内積を計算する
-//	float dot = (frontX * vx) + (frontZ * vz);
-//
-//	//内積値は-1.0～1.0で表現されており、2つの単位ベクトルの角度が
-//	//小さいほどに1.0に近づくという性質を利用して回転速度を調整する
-//	float rot = 1.0f - dot;
-//	if (rot > speed)rot = speed;
-//
-//	//左右判定を行うために2つの単位ベクトルの外積を計算する
-//	float cross = (frontZ * vx) - (frontX * vz);
-//
-//	//2Dの外積値が正の場合か負の場合によって左右判定が行える
-//	//左右判定を行うことによって左右回転を選択する
-//
-//	if (cross < 0.0f) {
-//		
-//		//angle.y -= speed;
-//		angle.y -= rot;
-//	}
-//	else {
-//		
-//		//angle.y += speed;
-//		angle.y += rot;
-//	}
-//
-//}
-// 
+
 
 //Player初期化
 void Player::Reset()
@@ -315,13 +217,7 @@ void Player::Reset()
 //移動入力処理
 void Player::InputMove(float elapsedTime) {
 	using namespace DirectX;
-	//進行ベクトル取得
-	//DirectX::XMFLOAT3 moveVec = GetMoveVec();kokoko削除
-	//移動処理
-	//Move(elapsedTime, moveVec.x, moveVec.z, moveSpeed*4);
-	//旋回処理
-	//Turn(elapsedTime, moveVec.x, moveVec.z, turnSpeed*2);
-	// 
+	
 		
 	// === 前後入力：axisY の符号で 前進/後退 を決める ===
 	float forwardIn = clamp(axisY, -1.0f, 1.0f);     // 上(前)＝+1, 下(後)＝-1
@@ -329,8 +225,7 @@ void Player::InputMove(float elapsedTime) {
 	float forwardSign = (forwardIn >= 0.0f) ? 1.0f : -1.0f;
 
 
-	// 入力があるときだけ加速
-	//float accel = (fabs(moveVec.x) > 0.1f || fabs(moveVec.z) > 0.1f) ? 1.0f : 0.0f;//kokoko削除
+	
 
 	// ★ 基本パラメータ（今までの値）
 	const float baseMaxSpeed = moveSpeed * 4.0f; // もともとの最高速
@@ -383,8 +278,8 @@ void Player::InputMove(float elapsedTime) {
 	float mx = fwd.x * speed * elapsedTime;
 	float mz = fwd.z * speed * elapsedTime;
 
-	XMFLOAT3 start = { position.x, position.y/* + stepOffset*/, position.z };
-	XMFLOAT3 end = { position.x + mx,     position.y /*+ stepOffset,*/ ,position.z + mz };
+	XMFLOAT3 start = { position.x, position.y, position.z };
+	XMFLOAT3 end = { position.x + mx,     position.y  ,position.z + mz };
 
 
 	HitResult hit;
@@ -459,7 +354,7 @@ void Player::CollisionPlayerVsEnemies()
 		{
 			SoundManager::Instance().PlaySE("SMASH");
 		// 押し出し後の位置設定
-			/*enemy->SetPosition(outPosition);*/
+		
 			DirectX::XMFLOAT3 dir = {
 			 enemy->GetPosition().x - position.x,
 			 0.0f,
@@ -523,13 +418,12 @@ void Player::CollisionPlayerVsBottleDelete()
 			item->GetRadius(),
 			outPosition))
 		{// 押し出し後の位置設定
-			/*moveSpeed += 1.3f;*/
+		
 			item->Destroy();
 			DeleteCount++;
 			SoundManager::Instance().PlaySE("HIT");
-			/*ui->gauge_UP_switch = true;
-			ui->cool_time_switch = false;*/
-			ui->iteam++;//kokokok
+			
+			ui->iteam++;
 		}
 	}
 }
@@ -577,38 +471,7 @@ void Player::PlayerDamage(float elapsedTime)
 void Player::drunkenness(float elapsedTime)
 {
 
-	//// タイマーを進める
-	//randomTimer += elapsedTime;
-
-	//// 3秒経過したら
-	//if (randomTimer >= 3.0f)
-	//{
-	//	randomTimer = 0.0f; // リセット
-
-	//	// ランダム生成（例：0〜99）
-	//	randomValue = rand() % 20;
-	//}
-	//
-	//	
-
-	//
-
-	//	if (axisX == 1)
-	//	{
-	//		position.x += randomValue *static_cast<float>(elapsedTime);
-	//	}
-	//	if (axisX == -1)
-	//	{
-	//		position.x -= randomValue * static_cast<float>(elapsedTime);
-	//	}
-	//	if (axisZ == 1)
-	//	{
-	//		position.y += randomValue *static_cast<float>(elapsedTime);
-	//	}
-	//	if (axisZ == -1)
-	//	{
-	//		position.y -= randomValue * static_cast<float>(elapsedTime);
-	//	}
+	
 
 	randomTimer += elapsedTime;
 	if (randomTimer >= 2.0f)
@@ -632,8 +495,7 @@ void Player::drunkenness(float elapsedTime)
 	}
 	float drunkenPower = 0.05f + (t * 0.30f);
 	// 操作入力に揺らぎを加える
-	/*axisX += drunkennessX * 0.2f;
-	axisY += drunkennessY * 0.2f;*/
+	
 	axisX += drunkennessX * drunkenPower;
 	axisY += drunkennessY * drunkenPower;
 	axisX = clamp(axisX, -1.0f, 1.0f);

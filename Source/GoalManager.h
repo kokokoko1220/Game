@@ -6,8 +6,7 @@
 class GameUI;
 class Goal;
 class Shader;
-class Player;          // ★ 追加：前方宣言（これがないと Player* が未定義）
-
+class Player;          
 class GoalManager {
 private:
     GoalManager() = default;
@@ -19,7 +18,7 @@ public:
         return instance;
     }
 
-    // ★ ここを置き換え：Update に Player* を渡す版にする（古い宣言は消す）
+   
     void Update(float elapsedTime, Player* player);
 
     void Render(ID3D11DeviceContext* dc, Shader* shader);
@@ -33,7 +32,7 @@ public:
     GameUI* ui = nullptr;
 private:
     void CollisionGoalVsGoals();
-    void CollisionPlayerVsGoals(Player* player);   // ★ 追加：宣言をヘッダに
+    void CollisionPlayerVsGoals(Player* player);   
 
 private:
     std::vector<Goal*> goals;

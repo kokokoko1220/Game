@@ -38,9 +38,7 @@ void SceneEnd::Update(float elapsedTime)
 	//なにかボタンを押したらゲームシーンへ切り替え
 	const GamePadButton anyButton =
 		GamePad::BTN_A
-		/* | GamePad::BTN_B
-			| GamePad::BTN_X
-			| GamePad::BTN_Y*/
+	
 		;
 	if (gamePad.GetButtonDown() & anyButton)
 	{
@@ -52,33 +50,7 @@ void SceneEnd::Update(float elapsedTime)
 //描画処理
 void SceneEnd::Render()
 {
-	//// ======== 2Dスプライト描画 ========
-	//{
-	//	Graphics& graphics = Graphics::Instance();
-	//	ID3D11DeviceContext* dc = graphics.GetDeviceContext();
-	//	RenderState* renderState = graphics.GetRenderState();
-
-	//	ID3D11RenderTargetView* rtv = graphics.GetRenderTargetView();
-	//	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
-
-	//	// 画面クリア＆レンダーターゲット設定
-	//	FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f };	// RGBA(0.0～1.0)
-	//	dc->ClearRenderTargetView(rtv, color);
-	//	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	//	dc->OMSetRenderTargets(1, &rtv, dsv);
-
-	//	// 2Dスプライト描画
-	//	{
-	//		// タイトル（スプライト）描画
-	//		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
-	//		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-	//		sprite->Render(dc,				//&rc
-	//			0, 0, 						//dx , dy , dz
-	//			screenWidth, screenHeight,	//dw , dh
-	//			0,							//angle
-	//			1, 1, 1, 1);				//color
-	//	}
-	//}
+	
   
         // ======== 2Dスプライト描画 ========
         Graphics& graphics = Graphics::Instance();
@@ -108,7 +80,7 @@ void SceneEnd::Render()
 
         // ===== テキスト描画（font1.png / face->textout）=====
 	   // ======== 時間表示（font1.png / textout）========
-    // --- ここから追加（背景を描いた“直後”に置く） ---
+  
         if (face) {
             // 1) アルファブレンドを有効化（GameUIと同じ）
             ID3D11DeviceContext* dc = Graphics::Instance().GetDeviceContext();
@@ -147,7 +119,7 @@ void SceneEnd::Render()
             dc->OMSetBlendState(nullptr, bf, 0xffffffff);
             if (alpha) alpha->Release();
         }
-        // --- ここまで追加 ---
+      
 
 
     

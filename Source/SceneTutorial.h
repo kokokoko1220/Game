@@ -10,19 +10,19 @@ public:
 	SceneTutorial() {}
 	~SceneTutorial() override {}
 
-	//������
+	
 	void Initialize() override;
 
-	//�I����
+	
 	void Finalize() override;
 
-	//�X�V����
+	
 	void Update(float elapsedTime) override;
 
-	//�`�揈��
+	
 	void Render() override;
 
-	//GUI�`��
+	//GUI
 	void DrawGUI() override;
 
 private:

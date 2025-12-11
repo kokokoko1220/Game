@@ -1,6 +1,6 @@
 #include "SoundManager.h"
 
-#include <Windows.h>   // HRESULT, CoInitializeEx など
+#include <Windows.h>  
 #include <fstream>
 #include <cstring>
 
@@ -24,10 +24,10 @@ void SoundManager::Initialize() {
 }
 
 void SoundManager::StopAll() {
-    // XAudio2 未初期化なら配列だけ掃除
+  
     if (!xAudio) { activeVoices.clear(); return; }
 
-    // エンジン停止中はコールバック/内部処理が止まる → 破棄が安全
+    
     xAudio->StopEngine();
 
     for (auto*& sv : activeVoices) {
@@ -124,7 +124,7 @@ void SoundManager::PlaySE(const std::string& key, float volume) {
     if (FAILED(sv->Start())) { sv->DestroyVoice(); return; }
 
     activeVoices.push_back(sv);
-    voicesByKey[key].push_back(sv);           // ★ ココ
+    voicesByKey[key].push_back(sv);           
 }
 
 void SoundManager::PlaySELoop(const std::string& key, float volume) {
@@ -152,7 +152,7 @@ void SoundManager::PlaySELoop(const std::string& key, float volume) {
     if (FAILED(sv->Start())) { sv->DestroyVoice(); return; }
 
     activeVoices.push_back(sv);
-    voicesByKey[key].push_back(sv);           // ★ ココ
+    voicesByKey[key].push_back(sv);         
 }
 
 void SoundManager::StopByKey(const std::string& key) {
@@ -165,7 +165,7 @@ void SoundManager::StopByKey(const std::string& key) {
         sv->Stop(0);
         sv->FlushSourceBuffers();
         sv->DestroyVoice();
-        // activeVoices 側からも取り除く
+        
         auto ait = std::find(activeVoices.begin(), activeVoices.end(), sv);
         if (ait != activeVoices.end()) activeVoices.erase(ait);
     }

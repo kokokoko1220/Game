@@ -29,7 +29,7 @@ void EffectManager::Initialize()
 
 void EffectManager::Finalize()
 {
-	//
+	
 }
 
 void EffectManager::Update(float elapsedTime)
@@ -39,16 +39,16 @@ void EffectManager::Update(float elapsedTime)
 
 void EffectManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
 {
-	//
+	
 	effekseerRenderer->SetCameraMatrix(*reinterpret_cast<const Effekseer::Matrix44*>(&view));
 	effekseerRenderer->SetProjectionMatrix(*reinterpret_cast<const Effekseer::Matrix44*>(&projection));
 
-	//
+	
 	effekseerRenderer->BeginRendering();
-	//
-	//
-	//
+	
+	
+
 	effekseerManager->Draw();
-	//
+	
 	effekseerRenderer->EndRendering();
 }

@@ -28,6 +28,6 @@ public:
 private:
 	GameUI* ui;
 	Sprite* sprite = nullptr;
-	Sprite* face = nullptr; // ← 追加：等幅フォント画像（ASCII）
+	Sprite* face = nullptr; 
 	float finalTime = 0.0f;
 };

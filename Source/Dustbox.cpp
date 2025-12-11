@@ -7,8 +7,7 @@
 void Creature::DrawDebugPrimitive() {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
-	//衝突判定用のデバック球を描画
-	//debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+	
 
 	//衝突判定用のデバック円柱を描画
 	debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
@@ -23,7 +22,7 @@ Dustbox::Dustbox() {
 
 	//スケーリング
 	scale.x = scale.y = scale.z = 0.002f;
-	/*position.y = 0.5f;*/
+	
 
 
 	//幅、高さ設定

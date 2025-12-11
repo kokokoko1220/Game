@@ -15,9 +15,9 @@
 #include"GoalManager.h"
 #include <vector>
 #include <random> 
-#include <algorithm>  // std::shuffle
-#include <numeric>    // (iota使わない版なら不要)
-#include <utility>    // std::swap（今回は未使用だが保険）
+#include <algorithm>  
+#include <numeric>    
+#include <utility>    
 #include"SoundManager.h"
 using namespace DirectX;
 
@@ -78,11 +78,7 @@ std::vector<DirectX::XMFLOAT3> goalspawnPoints = {
 // 初期化
 void SceneGame::Initialize()
 {
-	/*SoundManager::Instance().Initialize();
-	SoundManager::Instance().LoadSE("BGM", "Data/Audio/BGM.wav");
-	SoundManager::Instance().LoadSE("jump", "Data/Audio/SE.wav");*/
-	/*SoundManager::Instance().Load("BGM", "Data/Audio/BGM.wav");
-	SoundManager::Instance().Load("SE", "Data/Audio/SE.wav");*/
+	
 	SoundManager::Instance().Initialize();
 	
 	SoundManager::Instance().LoadSE("HIT", L"Data/Audio/瓶をたたく.wav");
@@ -120,24 +116,14 @@ void SceneGame::Initialize()
 	EnemyManager& enemyManager = EnemyManager::Instance();
 
 	
-	/*for (int i = 0; i < 2; i++) {
-		Enemycar* car = new Enemycar();
-		car->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
-		enemyManager.Register(car);
-	}*/
+
 	for (const auto& pos : enemySpawnPoints)
 	{
 		Enemycar* car = new Enemycar();
 		car->SetPosition(pos);
 		enemyManager.Register(car);
 	}
-	///一気に出る
-	//追尾エネミー
-	/*for (int i = 0; i < 1; i++) {
-		EnemyPolice* Police = new EnemyPolice();
-		Police->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 10));
-		enemyManager.Register(Police);
-	}*/
+	
 	//Police用
 	for (const auto& pos : enemyPoliceSpawnPoints)
 	{
@@ -161,14 +147,8 @@ void SceneGame::Initialize()
 		creatureManager.Register(dust);
 	}
 	player = &Player::Instance();
-	//配達位置
-	/*GoalManager& goalManager = GoalManager::Instance();
-	for (int i = 0; i <= 2; i++)
-	{
-		Goal* goal = new Goal();
-		goal->SetPosition(DirectX::XMFLOAT3(i * 10 - 10, 0, 0));
-		goalManager.Register(goal);
-	}*/
+	
+	
 	// 配達位置（Goal）をランダムに 3 つ生成
 	GoalManager& goalManager = GoalManager::Instance();
 
@@ -194,14 +174,14 @@ void SceneGame::Initialize()
 		goalManager.Register(goal);
 	}
 
-	// UI ������ď�����
+	// UI 
 	gameUI = new GameUI();
 	gameUI->Initialize();
 	auto& gm = GoalManager::Instance();
 	gm.ui = gameUI;
 	gameUI->SetGame(this); // または game のインスタンス
-	//Player::Instance().SetUI(gameUI);kokoko
-	player->SetUI(gameUI);	//kokokoko
+	
+	player->SetUI(gameUI);	
 	gameUI->SetPlayer(player);
 	
 }
@@ -258,11 +238,11 @@ void SceneGame::Update(float elapsedTime)
 	
 	//アイテム更新処理
 	ItemManager::Instance().Update(elapsedTime);
-	//SceneManager::Instance().Update(elapsedTime);
+	
 	GoalManager::Instance().Update(elapsedTime, player);
 	// ====================== =
 	// アイテムのスポーン処理
-	// =======================kokoko
+	// =======================
 	spawnTimerBO += elapsedTime;
 
 	if (spawnTimerBO >= spawnIntervalBO)
@@ -382,39 +362,13 @@ void SceneGame::Render()
 
 	}
 
-	// 3Dデバッグ描画
-	{
-
-		//// プレイヤーデバッグプリミティブ描画
-		//Player::Instance().DrawDebugPrimitive();
-
-		//// エネミーデバッグプリミティブ描画
-		//EnemyManager::Instance().DrawDebugPrimitive();
-
-		//// アイテムデバッグプリミティブ描画
-		//ItemManager::Instance().DrawDebugPrimitive();
-
-		////物デバッグプリミティブ描画
-		//CreatureManager::Instance().DrawDebugPrimitive();
-
-		//// ラインレンダラ描画実行
-		//graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
-
-		//// デバッグレンダラ描画実行
-		//graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
-	}
+	
 
 	// 2Dスプライト描画
 	{
 		gameUI->Render();
-		//SceneManager::Instance().Render();
+		
 	}
 
-	// 2DデバッグGUI描画
-	{
-
-	//プレイヤーデバッグ描画
-		/*Player::Instance().DrawDebugGUI();*/
 	
-	}
 }

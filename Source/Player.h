@@ -37,11 +37,7 @@ private :
 	//スティック入力値から移動ベクトルを取得
 	DirectX::XMFLOAT3 GetMoveVec()const;
 
-	//移動処理
-	//void Move(float elapsedTime, float vx, float vz, float speed);
-
-	//旋回処理
-	//void Turn(float elapsedTime, float vx, float vz, float speed);
+	
 	
 	//プレイヤーとエネミーとの衝突処理
 	void CollisionPlayerVsEnemies();
@@ -58,14 +54,7 @@ private :
 	//ダメージ処理
 	void PlayerDamage(float elapsedTime);
 
-	//ジャンプ処理
-	//void Jump(float speed);
-
-	//速力処理更新
-	//void UpdateVelocity(float elapsedTime);
-
-	//ジャンプ入力処理
-	//void InputJump();
+	
 
 	
 
@@ -81,9 +70,7 @@ private:
 	Model* model = nullptr;
 	float moveSpeed = 5.0f;
 	float turnSpeed = DirectX::XMConvertToRadians(720);
-	/*float jumpspeed = 20.0f;
-	float gravity = -1.0f;
-	DirectX::XMFLOAT3 velocity = { 0,0,0 };*/
+	
 
 	int DeleteCount = 0;
 

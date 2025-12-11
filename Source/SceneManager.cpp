@@ -13,7 +13,7 @@ void SceneManager::Update(float elapsedTime)
 		nextScene = nullptr;
 
 		// シーン初期化処理
-		//currentScene->Initialize();
+		
 		if (!currentScene->IsReady())	//ゲームシーンが準備済みなら
 		{
 			currentScene->Initialize();

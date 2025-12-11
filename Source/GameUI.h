@@ -28,7 +28,7 @@ public:
     SceneGame* game = nullptr;
     float gametimer = 0;
 private:
-    //std::unique_ptr<Sprite> sprite; // à¿ëSÇ»RAIIä«óù
+   
     Sprite* sprite = nullptr;
     Sprite* sprite2 = nullptr;
     Sprite* sprite3 = nullptr;

@@ -9,8 +9,8 @@ Goal::Goal() {
     model = new Model("Data/Model/Man/KCG.mdl");
     
     // モデルが巨大なのでまずは強制縮小（必要に応じて調整）
-    scale.x = scale.y = scale.z = 0.004f;  // ← ここだけ触ればサイズ調整できます
-    angle = { 0, 0, 0 };                     // Zだけ25度傾ける（不要なら0）
+    scale.x = scale.y = scale.z = 0.004f;  
+    angle = { 0, 0, 0 };                     
 }
 
 // デストラクタ
@@ -19,17 +19,17 @@ Goal::~Goal() {
 }
 
 // 更新処理（動かさない）
-void Goal::Update(float /*elapsedTime*/) {
+void Goal::Update(float ) {
     using namespace DirectX;
 
-    // ★ visualPos は使わない。position をそのまま使う
+   
     XMMATRIX S = XMMatrixScaling(scale.x, scale.y, scale.z);
-    XMMATRIX R = XMMatrixRotationZ(XMConvertToRadians(angle.z)); // 回転不要なら XMMatrixIdentity()
+    XMMATRIX R = XMMatrixRotationZ(XMConvertToRadians(angle.z)); 
     XMMATRIX T = XMMatrixTranslation(position.x, position.y, position.z);
 
     XMMATRIX world = S * R * T;
 
-    // ★ 行列を transform に書き込んでモデルに反映
+    
     XMStoreFloat4x4(&transform, world);
     model->UpdateTransform(transform);
 }

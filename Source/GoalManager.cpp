@@ -3,10 +3,10 @@
 #include "Goal.h"
 #include "Collision.h"
 #include "Graphics/DebugRenderer.h"
-#include "Player.h"   // ★ 角括弧でなくダブルクオート推奨
+#include "Player.h"  
 #include <SoundManager.h>
 
-void GoalManager::Update(float elapsedTime, Player* player) {   // ★ ヘッダと一致
+void GoalManager::Update(float elapsedTime, Player* player) {   
     // 1) ゴールの個別更新
     for (Goal* g : goals) {
         g->Update(elapsedTime);
@@ -27,7 +27,7 @@ void GoalManager::Update(float elapsedTime, Player* player) {   // ★ ヘッダと一
     }
     removes.clear();
 
-    // 必要なら：CollisionGoalVsGoals();
+  
 }
 
 void GoalManager::Render(ID3D11DeviceContext* dc, Shader* shader) {
@@ -69,13 +69,13 @@ void GoalManager::CollisionGoalVsGoals() {
     }
 }
 
-void GoalManager::CollisionPlayerVsGoals(Player* player) {  // ★ クラスメンバーとして定義
+void GoalManager::CollisionPlayerVsGoals(Player* player) {  
     using namespace DirectX;
 
     const XMFLOAT3 ppos = player->GetPosition();
     const float    prad = player->GetRadius();
 
-    XMFLOAT3 dummy; // out用（使わない）
+    XMFLOAT3 dummy; 
 
     for (Goal* g : goals) {
         if (!g) continue;

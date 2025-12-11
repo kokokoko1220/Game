@@ -36,9 +36,7 @@ void SceneGameOver::Update(float elapsedTime)
 	//なにかボタンを押したらゲームシーンへ切り替え
 	const GamePadButton anyButton =
 		GamePad::BTN_A
-		/* | GamePad::BTN_B
-			| GamePad::BTN_X
-			| GamePad::BTN_Y*/
+	
 		;
 	if (gamePad.GetButtonDown() & anyButton)
 	{

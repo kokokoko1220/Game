@@ -9,8 +9,8 @@
 EnemyPolice::EnemyPolice() {
     //車モデルを読み込み
 
-  //  model = new Model("Data/Model/Mr.Incredible/Mr.Incredible.mdl");
-    model = new Model("Data/Model/Ptcar/Ptcar2.mdl");//koko//パトカー
+ 
+    model = new Model("Data/Model/Ptcar/Ptcar2.mdl");//パトカー
     //スケーリング
     scale.x = scale.y = scale.z = 0.01f;
 
@@ -37,7 +37,7 @@ void EnemyPolice::Update(float elapsedTime) {
     switch (State) {
     case 0:
     {
-        angle.y += 0.01f;   //仮の動作
+        angle.y += 0.01f;   
 
         if (EnemyView())
         {
@@ -107,14 +107,14 @@ bool EnemyPolice::EnemyView() {
     // -------------------------------
     // ▼ 敵の前方向ベクトルを作る部分
     // -------------------------------
-    float yaw = angle.y;   // ← ここはあなたの Enemy の Y軸回転に合わせて
+    float yaw = angle.y;   
 
     XMFLOAT3 forwardDir = {
         sinf(yaw),    // x
         0.0f,         // y
         cosf(yaw)     // z
     };
-    // -------------------------------
+   
 
     // 正規化
     XMVECTOR dirToPlayer = XMVector3Normalize(XMLoadFloat3(&toPlayer));

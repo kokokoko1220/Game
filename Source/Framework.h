@@ -13,8 +13,8 @@ public:
 	~Framework();
 
 private:
-	void Update(float elapsedTime/*Elapsed seconds from last frame*/);
-	void Render(float elapsedTime/*Elapsed seconds from last frame*/);
+	void Update(float elapsedTime);
+	void Render(float elapsedTime);
 
 	void CalculateFrameStats();
 

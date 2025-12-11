@@ -2,7 +2,7 @@
 #include"Item.h"
 #include"Graphics/Graphics.h"
 #include "Bottle.h"
-#include <cmath> // sin関数用
+#include <cmath> 
 using namespace DirectX;
 //デバックプリミティブ描画
 void Item::DrawDebugPrimitive() {
@@ -21,8 +21,7 @@ Bottle::Bottle() {
 	//スケーリング
 	scale.x = scale.y = scale.z = 0.004f;
 	angle.z = 25;
-	//position.x = 70.0f;
-	//position.y = 8.0f;
+	
 }
 
 //デストラクタ
@@ -60,10 +59,7 @@ void Bottle::Update(float elapsedTime) {
 	// モデル行列を更新
 	model->UpdateTransform(transform);
 
-	////オブジェクト行列を更新
-	//UpdateTransform();
-	////モデル行列更新
-	//model->UpdateTransform(transform);
+	
 }
 
 //描画処理
